@@ -1,6 +1,6 @@
 {
   "locations": {
-    "loc1": {
+    "a7b3d8e2-4f1c-9a6b-3e5d-8c2f1a9b7e4d": {
       "name": "Location 1 - Park Entrance",
       "questions": [
         {
@@ -23,7 +23,7 @@
         }
       ]
     },
-    "loc2": {
+    "c9f2e1a8-7d3b-4c6e-a5f8-2b9d1e7c3a6f": {
       "name": "Location 2 - Fountain",
       "questions": [
         {
@@ -46,7 +46,7 @@
         }
       ]
     },
-    "loc3": {
+    "e5d4c3b2-1a9f-8e7d-6c5b-4a3f2e1d9c8b": {
       "name": "Location 3 - Old Tree",
       "questions": [
         {

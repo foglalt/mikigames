@@ -64,14 +64,14 @@ Edit `docs/data/questions.json` to add your own locations and questions:
 ```json
 {
   "locations": {
-    "loc1": {
+    "a7b3d8e2-4f1c-9a6b-3e5d-8c2f1a9b7e4d": {
       "name": "Your Location Name",
       "questions": [
         {
           "id": "q1",
           "question": "Your question here?",
           "options": ["Option A", "Option B", "Option C", "Option D"],
-          "correctAnswer": 0  // Index of correct option (0-based)
+          "correctAnswer": 0
         }
       ]
     }
@@ -79,14 +79,14 @@ Edit `docs/data/questions.json` to add your own locations and questions:
 }
 ```
 
+**Note:** Location IDs use GUIDs to prevent users from guessing URLs. Generate new GUIDs for each location using an online generator or your programming language's UUID library.
+
 ## Generating QR Codes
 
 For each location, create a QR code pointing to:
 
 ```
-https://your-site.github.io/your-repo/location.html?id=loc1
-https://your-site.github.io/your-repo/location.html?id=loc2
-https://your-site.github.io/your-repo/location.html?id=loc3
+https://your-site.github.io/your-repo/location.html?id=a7b3d8e2-4f1c-9a6b-3e5d-8c2f1a9b7e4d
 ```
 
 You can use any QR code generator like:
