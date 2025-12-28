@@ -1,15 +1,14 @@
 // Admin page logic
 
-import { getVisits, getStatistics, getVisitsByUser, clearAllVisits } from './firebase.js';
+import { getCollections, getStatistics, getCollectionsByUser, clearAllCollections } from './firebase.js';
 
 // Get DOM elements
 const totalUsersEl = document.getElementById('total-users');
-const totalVisitsEl = document.getElementById('total-visits');
-const correctAnswersEl = document.getElementById('correct-answers');
+const totalCollectionsEl = document.getElementById('total-collections');
 const loadingEl = document.getElementById('loading');
 const noDataEl = document.getElementById('no-data');
 const tableContainer = document.getElementById('table-container');
-const visitsBody = document.getElementById('visits-body');
+const collectionsBody = document.getElementById('collections-body');
 const userSummaryContainer = document.getElementById('user-summary-container');
 const refreshBtn = document.getElementById('refresh-btn');
 const clearBtn = document.getElementById('clear-btn');
@@ -36,13 +35,12 @@ function loadData() {
   // Load statistics
   const stats = getStatistics();
   totalUsersEl.textContent = stats.totalUsers;
-  totalVisitsEl.textContent = stats.totalVisits;
-  correctAnswersEl.textContent = stats.correctAnswers;
+  totalCollectionsEl.textContent = stats.totalCollections;
   
-  // Load visits
-  const visits = getVisits();
+  // Load collections
+  const collections = getCollections();
   
-  if (visits.length === 0) {
+  if (collections.length === 0) {
     noDataEl.classList.remove('hidden');
     tableContainer.classList.add('hidden');
     userSummaryContainer.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">No users yet.</p>';
@@ -52,42 +50,38 @@ function loadData() {
   noDataEl.classList.add('hidden');
   tableContainer.classList.remove('hidden');
   
-  // Render visits table (most recent first)
-  visitsBody.innerHTML = '';
-  [...visits].reverse().forEach(visit => {
+  // Render collections table (most recent first)
+  collectionsBody.innerHTML = '';
+  [...collections].reverse().forEach(item => {
     const row = document.createElement('tr');
     row.innerHTML = `
-      <td>${escapeHtml(visit.username)}</td>
-      <td>${escapeHtml(visit.locationName || visit.locationId)}</td>
-      <td>
-        <span class="status-badge ${visit.isCorrect ? 'correct' : 'incorrect'}">
-          ${visit.isCorrect ? '✓ Correct' : '✗ Wrong'}
-        </span>
-      </td>
-      <td>${formatTime(visit.timestamp)}</td>
+      <td>${escapeHtml(item.username)}</td>
+      <td>${escapeHtml(item.locationName || item.locationId)}</td>
+      <td>${escapeHtml(item.collectibleTitle)}</td>
+      <td>${formatTime(item.timestamp)}</td>
     `;
-    visitsBody.appendChild(row);
+    collectionsBody.appendChild(row);
   });
   
   // Render user summaries
-  const userSummaries = getVisitsByUser();
+  const userSummaries = getCollectionsByUser();
   userSummaryContainer.innerHTML = '';
   
   userSummaries.forEach(user => {
     const userCard = document.createElement('div');
     userCard.style.cssText = 'padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 12px;';
     
-    const locations = user.visits.map(v => v.locationName || v.locationId).join(', ');
+    const locations = user.items.map(i => i.locationName || i.locationId).join(', ');
     
     userCard.innerHTML = `
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
         <strong>${escapeHtml(user.username)}</strong>
-        <span class="status-badge ${user.correctCount === user.totalCount ? 'correct' : 'incorrect'}">
-          ${user.correctCount}/${user.totalCount} correct
+        <span style="color: var(--primary-color); font-weight: 500;">
+          ${user.totalCount} collected
         </span>
       </div>
       <div style="font-size: 0.875rem; color: var(--text-secondary);">
-        Visited: ${escapeHtml(locations)}
+        Locations: ${escapeHtml(locations)}
       </div>
     `;
     userSummaryContainer.appendChild(userCard);
@@ -110,8 +104,8 @@ function setupEventListeners() {
   refreshBtn.addEventListener('click', loadData);
   
   clearBtn.addEventListener('click', () => {
-    if (confirm('Are you sure you want to clear all visit data? This cannot be undone.')) {
-      clearAllVisits();
+    if (confirm('Are you sure you want to clear all collection data? This cannot be undone.')) {
+      clearAllCollections();
       loadData();
     }
   });

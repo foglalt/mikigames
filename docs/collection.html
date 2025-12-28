@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Collection</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Not logged in -->
+    <div id="no-user-section" class="card hidden">
+      <h1>👋 Welcome!</h1>
+      <p class="subtitle">Please register first to view your collection.</p>
+      <a href="index.html" class="btn btn-primary" style="display: block; text-decoration: none; text-align: center;">
+        Register Now
+      </a>
+    </div>
+
+    <!-- Collection view -->
+    <div id="collection-section" class="hidden">
+      <!-- Header with progress -->
+      <div class="card collection-header-card">
+        <h1>📚 My Collection</h1>
+        <p class="username-display">Collector: <strong id="username-display"></strong></p>
+        
+        <!-- Progress bar -->
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+          <p class="progress-text">
+            <span id="collected-count">0</span> / <span id="total-count">0</span> collected
+            <span class="remaining-text">(<span id="remaining-count">0</span> remaining)</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Collected items -->
+      <div class="card">
+        <h2>✨ Collected Items</h2>
+        <div id="collected-items">
+          <p class="empty-state">No items collected yet. Scan a QR code to start!</p>
+        </div>
+      </div>
+
+      <!-- Remaining locations -->
+      <div class="card">
+        <h2>🗺️ Locations to Visit</h2>
+        <div id="remaining-locations">
+          <p class="empty-state">Loading...</p>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="card">
+        <a href="index.html" class="btn btn-primary" style="display: block; text-decoration: none; text-align: center;">
+          ← Back to Home
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/collection.js"></script>
+</body>
+</html>

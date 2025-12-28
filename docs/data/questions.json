@@ -1,73 +1,39 @@
 {
+  "gameTitle": "Quote Collector",
+  "gameDescription": "Visit all locations to collect inspiring quotes!",
   "locations": {
     "a7b3d8e2-4f1c-9a6b-3e5d-8c2f1a9b7e4d": {
-      "name": "Location 1 - Park Entrance",
-      "questions": [
-        {
-          "id": "q1",
-          "question": "What is the capital of France?",
-          "options": ["London", "Paris", "Berlin", "Madrid"],
-          "correctAnswer": 1
-        },
-        {
-          "id": "q2",
-          "question": "How many continents are there?",
-          "options": ["5", "6", "7", "8"],
-          "correctAnswer": 2
-        },
-        {
-          "id": "q3",
-          "question": "What year did World War II end?",
-          "options": ["1943", "1944", "1945", "1946"],
-          "correctAnswer": 2
-        }
-      ]
+      "name": "Park Entrance",
+      "icon": "🌳",
+      "collectible": {
+        "id": "quote1",
+        "type": "quote",
+        "title": "The Journey Begins",
+        "content": "The journey of a thousand miles begins with a single step.",
+        "author": "Lao Tzu"
+      }
     },
     "c9f2e1a8-7d3b-4c6e-a5f8-2b9d1e7c3a6f": {
-      "name": "Location 2 - Fountain",
-      "questions": [
-        {
-          "id": "q1",
-          "question": "What is the largest planet in our solar system?",
-          "options": ["Earth", "Saturn", "Jupiter", "Neptune"],
-          "correctAnswer": 2
-        },
-        {
-          "id": "q2",
-          "question": "Who painted the Mona Lisa?",
-          "options": ["Van Gogh", "Picasso", "Da Vinci", "Michelangelo"],
-          "correctAnswer": 2
-        },
-        {
-          "id": "q3",
-          "question": "What is H2O commonly known as?",
-          "options": ["Salt", "Sugar", "Water", "Oxygen"],
-          "correctAnswer": 2
-        }
-      ]
+      "name": "Fountain",
+      "icon": "⛲",
+      "collectible": {
+        "id": "quote2",
+        "type": "quote",
+        "title": "Stay Curious",
+        "content": "The important thing is not to stop questioning. Curiosity has its own reason for existing.",
+        "author": "Albert Einstein"
+      }
     },
     "e5d4c3b2-1a9f-8e7d-6c5b-4a3f2e1d9c8b": {
-      "name": "Location 3 - Old Tree",
-      "questions": [
-        {
-          "id": "q1",
-          "question": "How many legs does a spider have?",
-          "options": ["6", "8", "10", "12"],
-          "correctAnswer": 1
-        },
-        {
-          "id": "q2",
-          "question": "What is the smallest country in the world?",
-          "options": ["Monaco", "Vatican City", "San Marino", "Liechtenstein"],
-          "correctAnswer": 1
-        },
-        {
-          "id": "q3",
-          "question": "Which element has the chemical symbol 'O'?",
-          "options": ["Gold", "Oxygen", "Osmium", "Oganesson"],
-          "correctAnswer": 1
-        }
-      ]
+      "name": "Old Tree",
+      "icon": "🌲",
+      "collectible": {
+        "id": "quote3",
+        "type": "quote",
+        "title": "Embrace Change",
+        "content": "The only way to make sense out of change is to plunge into it, move with it, and join the dance.",
+        "author": "Alan Watts"
+      }
     }
   }
 }

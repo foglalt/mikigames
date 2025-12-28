@@ -1,37 +1,41 @@
-# QR Quiz Game 🎮
+# Quote Collector 📚
 
-A mobile-friendly quiz game where users visit physical locations, scan QR codes, and answer questions. Perfect for treasure hunts, educational tours, or team-building events.
+A mobile-friendly collection game where users visit physical locations, scan QR codes, and collect inspiring quotes. Perfect for treasure hunts, educational tours, or team-building events.
 
 ## Features
 
 - **📱 Mobile-First Design** - Optimized for scanning QR codes on phones
 - **👤 User Tracking** - Remember users by username on each device
-- **❓ Random Questions** - Each location shows a random question from its pool
-- **🔐 Admin Dashboard** - Track which users visited which locations
-- **📊 Statistics** - View correct answer rates and user progress
+- **✨ Collect Items** - Each location has a unique quote to collect
+- **📖 View Collection** - Users can see their collected items and remaining locations
+- **🔐 Admin Dashboard** - Track which users collected which items
+- **📊 Progress Tracking** - Visual progress bar shows collection completion
 - **🚀 Static Hosting** - Deploy easily on GitHub Pages
 
 ## How It Works
 
 1. **Users register** with a username on their first visit
 2. **Scan QR codes** at different physical locations
-3. **Answer questions** - each location has its own question pool
-4. **Admin tracks** all visits and answers in the dashboard
+3. **Collect quotes** - each location has a unique quote
+4. **View collection** - see all collected quotes and remaining locations
+5. **Admin tracks** all collections in the dashboard
 
 ## Project Structure
 
 ```
 docs/
 ├── index.html          # User registration & home
-├── location.html       # Question page (accessed via QR)
+├── location.html       # Collection page (accessed via QR)
+├── collection.html     # User's collection view
 ├── admin.html          # Admin dashboard
 ├── css/
 │   └── style.css       # Styling
 ├── data/
-│   └── questions.json  # Questions database
+│   └── questions.json  # Collectibles database
 └── js/
     ├── app.js          # Registration logic
-    ├── location.js     # Question display logic
+    ├── location.js     # Collection logic
+    ├── collection.js   # Collection view logic
     ├── admin.js        # Admin dashboard logic
     └── firebase.js     # Data storage (localStorage)
 ```
@@ -57,23 +61,25 @@ Open http://localhost:3000 in your browser.
 
 Your site will be available at `https://your-username.github.io/your-repo-name/`
 
-## Customizing Questions
+## Customizing Collectibles
 
-Edit `docs/data/questions.json` to add your own locations and questions:
+Edit `docs/data/questions.json` to add your own locations and collectibles:
 
 ```json
 {
+  "gameTitle": "Quote Collector",
+  "gameDescription": "Visit all locations to collect inspiring quotes!",
   "locations": {
     "a7b3d8e2-4f1c-9a6b-3e5d-8c2f1a9b7e4d": {
-      "name": "Your Location Name",
-      "questions": [
-        {
-          "id": "q1",
-          "question": "Your question here?",
-          "options": ["Option A", "Option B", "Option C", "Option D"],
-          "correctAnswer": 0
-        }
-      ]
+      "name": "Park Entrance",
+      "icon": "🌳",
+      "collectible": {
+        "id": "quote1",
+        "type": "quote",
+        "title": "The Journey Begins",
+        "content": "The journey of a thousand miles begins with a single step.",
+        "author": "Lao Tzu"
+      }
     }
   }
 }
@@ -97,7 +103,7 @@ You can use any QR code generator like:
 
 Currently, the app uses **localStorage** for data storage, which means:
 - User data persists on each device
-- Admin can only see visits from the same device
+- Admin can only see collections from the same device
 
 For cross-device tracking, you would need to integrate with a backend service like Firebase Realtime Database (the structure is already prepared in `firebase.js`).
 

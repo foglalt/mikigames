@@ -1,6 +1,6 @@
-// Location page logic - shows questions for each QR code location
+// Location page logic - handles collecting items from QR code locations
 
-import { recordVisit, hasUserVisitedLocation } from './firebase.js';
+import { recordCollection, hasUserCollectedLocation } from './firebase.js';
 
 const USER_KEY = 'qr_quiz_user';
 
@@ -8,20 +8,28 @@ const USER_KEY = 'qr_quiz_user';
 const loadingSection = document.getElementById('loading-section');
 const noUserSection = document.getElementById('no-user-section');
 const invalidLocationSection = document.getElementById('invalid-location-section');
-const questionSection = document.getElementById('question-section');
-const alreadyAnsweredSection = document.getElementById('already-answered-section');
+const collectSection = document.getElementById('collect-section');
+const alreadyCollectedSection = document.getElementById('already-collected-section');
+
+const locationIcon = document.getElementById('location-icon');
 const locationNameBadge = document.getElementById('location-name');
-const questionText = document.getElementById('question-text');
-const optionsContainer = document.getElementById('options-container');
-const resultContainer = document.getElementById('result-container');
-const resultMessage = document.getElementById('result-message');
-const previousResult = document.getElementById('previous-result');
+const collectibleReveal = document.getElementById('collectible-reveal');
+const collectibleTitle = document.getElementById('collectible-title');
+const collectibleContent = document.getElementById('collectible-content');
+const collectibleAuthor = document.getElementById('collectible-author');
+const collectBtn = document.getElementById('collect-btn');
+const successMessage = document.getElementById('success-message');
+
+// Already collected elements
+const existingTitle = document.getElementById('existing-title');
+const existingContent = document.getElementById('existing-content');
+const existingAuthor = document.getElementById('existing-author');
 
 // Current state
-let currentQuestion = null;
+let currentCollectible = null;
 let currentLocation = null;
+let currentLocationData = null;
 let currentUser = null;
-let hasAnswered = false;
 
 /**
  * Get the current user from localStorage
@@ -44,111 +52,79 @@ function getLocationIdFromUrl() {
 }
 
 /**
- * Load questions data from JSON file
+ * Load collectibles data from JSON file
  */
-async function loadQuestionsData() {
+async function loadCollectiblesData() {
   try {
     const response = await fetch('data/questions.json');
-    if (!response.ok) throw new Error('Failed to load questions');
+    if (!response.ok) throw new Error('Failed to load data');
     return await response.json();
   } catch (error) {
-    console.error('Error loading questions:', error);
+    console.error('Error loading data:', error);
     return null;
   }
-}
-
-/**
- * Get a random question from a location
- */
-function getRandomQuestion(locationData) {
-  const questions = locationData.questions;
-  const randomIndex = Math.floor(Math.random() * questions.length);
-  return questions[randomIndex];
 }
 
 /**
  * Show a specific section and hide others
  */
 function showSection(sectionToShow) {
-  [loadingSection, noUserSection, invalidLocationSection, questionSection, alreadyAnsweredSection]
+  [loadingSection, noUserSection, invalidLocationSection, collectSection, alreadyCollectedSection]
     .forEach(section => section.classList.add('hidden'));
   sectionToShow.classList.remove('hidden');
 }
 
 /**
- * Render the question and options
+ * Render the collectible item
  */
-function renderQuestion(question, locationData) {
+function renderCollectible(collectible, locationData) {
+  locationIcon.textContent = locationData.icon || '📍';
   locationNameBadge.textContent = locationData.name;
-  questionText.textContent = question.question;
-  
-  optionsContainer.innerHTML = '';
-  
-  question.options.forEach((option, index) => {
-    const button = document.createElement('button');
-    button.className = 'btn btn-option';
-    button.textContent = option;
-    button.dataset.index = index;
-    button.addEventListener('click', () => handleAnswer(index, question.correctAnswer));
-    optionsContainer.appendChild(button);
-  });
+  collectibleTitle.textContent = collectible.title;
+  collectibleContent.textContent = `"${collectible.content}"`;
+  collectibleAuthor.textContent = `— ${collectible.author}`;
 }
 
 /**
- * Handle user's answer
+ * Handle collecting the item
  */
-async function handleAnswer(selectedIndex, correctIndex) {
-  if (hasAnswered) return;
-  hasAnswered = true;
+async function handleCollect() {
+  if (!currentCollectible || !currentUser) return;
   
-  const isCorrect = selectedIndex === correctIndex;
-  const buttons = optionsContainer.querySelectorAll('.btn-option');
+  // Disable button to prevent double-clicks
+  collectBtn.disabled = true;
+  collectBtn.textContent = 'Collecting...';
   
-  // Disable all buttons and show correct/incorrect
-  buttons.forEach((btn, index) => {
-    btn.disabled = true;
-    if (index === correctIndex) {
-      btn.classList.add('correct');
-    } else if (index === selectedIndex && !isCorrect) {
-      btn.classList.add('incorrect');
-    }
-  });
+  // Reveal the collectible with animation
+  collectibleReveal.classList.remove('hidden');
+  collectibleReveal.classList.add('reveal-animation');
   
-  // Show result message
-  resultContainer.classList.remove('hidden');
-  if (isCorrect) {
-    resultMessage.textContent = '🎉 Correct! Well done!';
-    resultMessage.className = 'result-message success';
-  } else {
-    resultMessage.textContent = '❌ Not quite right. Try another location!';
-    resultMessage.className = 'result-message error';
-  }
-  
-  // Record the visit
-  await recordVisit({
+  // Record the collection
+  await recordCollection({
     username: currentUser.username,
     locationId: currentLocation,
-    locationName: currentQuestion.locationName,
-    questionId: currentQuestion.id,
-    isCorrect: isCorrect,
-    selectedAnswer: selectedIndex,
-    correctAnswer: correctIndex
+    locationName: currentLocationData.name,
+    collectibleId: currentCollectible.id,
+    collectibleTitle: currentCollectible.title,
+    collectibleContent: currentCollectible.content,
+    collectibleAuthor: currentCollectible.author
   });
+  
+  // Show success after a delay
+  setTimeout(() => {
+    collectBtn.classList.add('hidden');
+    successMessage.classList.remove('hidden');
+  }, 1000);
 }
 
 /**
- * Show the already answered state
+ * Show the already collected state
  */
-function showAlreadyAnswered(previousVisit) {
-  showSection(alreadyAnsweredSection);
-  
-  if (previousVisit.isCorrect) {
-    previousResult.textContent = '🎉 You answered correctly!';
-    previousResult.className = 'result-message success';
-  } else {
-    previousResult.textContent = '❌ You answered incorrectly.';
-    previousResult.className = 'result-message error';
-  }
+function showAlreadyCollected(previousCollection) {
+  showSection(alreadyCollectedSection);
+  existingTitle.textContent = previousCollection.collectibleTitle;
+  existingContent.textContent = `"${previousCollection.collectibleContent}"`;
+  existingAuthor.textContent = `— ${previousCollection.collectibleAuthor}`;
 }
 
 /**
@@ -169,28 +145,31 @@ async function init() {
     return;
   }
   
-  // Check if user already answered this location
-  const previousVisit = hasUserVisitedLocation(currentUser.username, currentLocation);
-  if (previousVisit) {
-    showAlreadyAnswered(previousVisit);
+  // Check if user already collected this location
+  const previousCollection = hasUserCollectedLocation(currentUser.username, currentLocation);
+  if (previousCollection) {
+    showAlreadyCollected(previousCollection);
     return;
   }
   
-  // Load questions data
-  const questionsData = await loadQuestionsData();
-  if (!questionsData || !questionsData.locations[currentLocation]) {
+  // Load collectibles data
+  const data = await loadCollectiblesData();
+  if (!data || !data.locations[currentLocation]) {
     showSection(invalidLocationSection);
     return;
   }
   
-  // Get location data and random question
-  const locationData = questionsData.locations[currentLocation];
-  currentQuestion = getRandomQuestion(locationData);
-  currentQuestion.locationName = locationData.name;
+  // Get location data and collectible
+  currentLocationData = data.locations[currentLocation];
+  currentCollectible = currentLocationData.collectible;
   
-  // Render the question
-  renderQuestion(currentQuestion, locationData);
-  showSection(questionSection);
+  // Render the collectible (hidden until button is pressed)
+  renderCollectible(currentCollectible, currentLocationData);
+  
+  // Setup collect button
+  collectBtn.addEventListener('click', handleCollect);
+  
+  showSection(collectSection);
 }
 
 // Initialize when DOM is ready

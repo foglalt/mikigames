@@ -1,45 +1,47 @@
-// Firebase configuration for tracking visits across devices
-// Using Firebase Realtime Database (free tier)
+// Data storage for tracking collections across users
+// Using localStorage (could be upgraded to Firebase for cross-device sync)
 
-const FIREBASE_CONFIG = {
-  // For a production app, you would use your own Firebase project
-  // This is a placeholder - we'll use localStorage as fallback
-  databaseURL: null
-};
-
-// Storage key for localStorage fallback
-const STORAGE_KEY = 'qr_quiz_visits';
+// Storage keys
+const COLLECTION_KEY = 'qr_collection_items';
 
 /**
  * Initialize the database connection
- * Falls back to localStorage if Firebase is not configured
  */
 export function initDatabase() {
-  // For now, we use localStorage as the data store
-  // In production, you would initialize Firebase here
   console.log('Database initialized (localStorage mode)');
 }
 
 /**
- * Record a user visit to a location
+ * Record a collected item for a user
  */
-export async function recordVisit(visitData) {
-  const visits = getVisits();
-  visits.push({
-    ...visitData,
+export async function recordCollection(collectionData) {
+  const collections = getCollections();
+  
+  // Check if already collected
+  const existing = collections.find(
+    c => c.username === collectionData.username && c.locationId === collectionData.locationId
+  );
+  
+  if (existing) {
+    return false; // Already collected
+  }
+  
+  collections.push({
+    ...collectionData,
     id: generateId(),
     timestamp: new Date().toISOString()
   });
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(visits));
+  
+  localStorage.setItem(COLLECTION_KEY, JSON.stringify(collections));
   return true;
 }
 
 /**
- * Get all visits from storage
+ * Get all collections from storage
  */
-export function getVisits() {
+export function getCollections() {
   try {
-    const data = localStorage.getItem(STORAGE_KEY);
+    const data = localStorage.getItem(COLLECTION_KEY);
     return data ? JSON.parse(data) : [];
   } catch {
     return [];
@@ -47,56 +49,71 @@ export function getVisits() {
 }
 
 /**
- * Check if a user has already visited a location
+ * Get all collected items for a specific user
  */
-export function hasUserVisitedLocation(username, locationId) {
-  const visits = getVisits();
-  return visits.find(v => v.username === username && v.locationId === locationId);
+export function getUserCollection(username) {
+  const collections = getCollections();
+  return collections.filter(c => c.username === username);
 }
 
 /**
- * Clear all visit data
+ * Check if a user has already collected from a location
  */
-export function clearAllVisits() {
-  localStorage.removeItem(STORAGE_KEY);
+export function hasUserCollectedLocation(username, locationId) {
+  const collections = getCollections();
+  return collections.find(c => c.username === username && c.locationId === locationId);
 }
 
 /**
- * Get statistics summary
+ * Get collection progress for a user
  */
-export function getStatistics() {
-  const visits = getVisits();
-  const uniqueUsers = new Set(visits.map(v => v.username));
-  const correctAnswers = visits.filter(v => v.isCorrect).length;
-  
+export function getCollectionProgress(username, totalLocations) {
+  const userCollection = getUserCollection(username);
   return {
-    totalUsers: uniqueUsers.size,
-    totalVisits: visits.length,
-    correctAnswers: correctAnswers
+    collected: userCollection.length,
+    total: totalLocations,
+    remaining: totalLocations - userCollection.length,
+    percentage: Math.round((userCollection.length / totalLocations) * 100)
   };
 }
 
 /**
- * Get visits grouped by user
+ * Clear all collection data
  */
-export function getVisitsByUser() {
-  const visits = getVisits();
+export function clearAllCollections() {
+  localStorage.removeItem(COLLECTION_KEY);
+}
+
+/**
+ * Get statistics summary for admin
+ */
+export function getStatistics() {
+  const collections = getCollections();
+  const uniqueUsers = new Set(collections.map(c => c.username));
+  
+  return {
+    totalUsers: uniqueUsers.size,
+    totalCollections: collections.length
+  };
+}
+
+/**
+ * Get collections grouped by user
+ */
+export function getCollectionsByUser() {
+  const collections = getCollections();
   const userMap = {};
   
-  visits.forEach(visit => {
-    if (!userMap[visit.username]) {
-      userMap[visit.username] = {
-        username: visit.username,
-        visits: [],
-        correctCount: 0,
+  collections.forEach(item => {
+    if (!userMap[item.username]) {
+      userMap[item.username] = {
+        username: item.username,
+        items: [],
         totalCount: 0
       };
     }
-    userMap[visit.username].visits.push(visit);
-    userMap[visit.username].totalCount++;
-    if (visit.isCorrect) {
-      userMap[visit.username].correctCount++;
-    }
+    userMap[item.username].items.push(item);
+    userMap[item.username].totalCount++;
   });
   
   return Object.values(userMap);

@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - QR Quiz Game</title>
+  <title>Admin - Quote Collector</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <div class="container admin-container">
     <div class="card">
       <h1>🔐 Admin Dashboard</h1>
-      <p class="subtitle">Track user visits and answers</p>
+      <p class="subtitle">Track user collections</p>
     </div>
 
     <!-- Stats overview -->
@@ -20,21 +20,17 @@
         <div class="stat-label">Total Users</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number" id="total-visits">0</div>
-        <div class="stat-label">Total Visits</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number" id="correct-answers">0</div>
-        <div class="stat-label">Correct Answers</div>
+        <div class="stat-number" id="total-collections">0</div>
+        <div class="stat-label">Items Collected</div>
       </div>
     </div>
 
-    <!-- Visits table -->
+    <!-- Collections table -->
     <div class="card">
-      <h2>Recent Activity</h2>
+      <h2>Recent Collections</h2>
       <div id="loading" class="loading">Loading data...</div>
       <div id="no-data" class="hidden" style="text-align: center; padding: 20px; color: var(--text-secondary);">
-        No visits recorded yet.
+        No collections recorded yet.
       </div>
       <div id="table-container" class="hidden" style="overflow-x: auto;">
         <table class="visits-table">
@@ -42,11 +38,11 @@
             <tr>
               <th>User</th>
               <th>Location</th>
-              <th>Result</th>
+              <th>Item</th>
               <th>Time</th>
             </tr>
           </thead>
-          <tbody id="visits-body">
+          <tbody id="collections-body">
             <!-- Data will be inserted here -->
           </tbody>
         </table>
@@ -73,7 +69,7 @@
     </div>
 
     <div style="text-align: center; margin-top: 20px;">
-      <a href="index.html" style="color: var(--primary-color);">← Back to Game</a>
+      <a href="index.html" style="color: var(--primary-color);">← Back to Home</a>
     </div>
   </div>
 
