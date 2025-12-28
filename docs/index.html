@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Quiz Game</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Welcome back section for returning users -->
+    <div id="welcome-back" class="welcome-back hidden">
+      Welcome back, <span id="current-username"></span>! 👋
+    </div>
+
+    <!-- Registration form for new users -->
+    <div id="registration-section" class="card">
+      <h1>🎮 QR Quiz Game</h1>
+      <p class="subtitle">Enter your name to start playing!</p>
+      
+      <form id="registration-form">
+        <div class="form-group">
+          <label for="username">Your Name</label>
+          <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            placeholder="Enter your name..."
+            required
+            minlength="2"
+            maxlength="30"
+          >
+        </div>
+        <button type="submit" class="btn btn-primary">Start Playing</button>
+      </form>
+    </div>
+
+    <!-- Instructions for registered users -->
+    <div id="instructions-section" class="card hidden">
+      <h1>Ready to Play! 🎯</h1>
+      <p class="subtitle">Scan a QR code to answer questions</p>
+      
+      <div style="text-align: center; padding: 20px;">
+        <p style="margin-bottom: 16px;">Find the QR codes at different locations and scan them with your phone camera.</p>
+        <p style="color: var(--text-secondary);">Each location has a unique question for you!</p>
+      </div>
+
+      <div style="margin-top: 20px;">
+        <button id="change-user-btn" class="btn btn-primary" style="background: #64748b;">
+          Change Username
+        </button>
+      </div>
+    </div>
+
+    <!-- Test links for development -->
+    <div class="card" style="margin-top: 20px;">
+      <h2>📍 Test Locations</h2>
+      <p style="margin-bottom: 16px; color: var(--text-secondary);">Click to simulate scanning QR codes:</p>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <a href="location.html?id=loc1" style="color: var(--primary-color);">Location 1 - Park Entrance</a>
+        <a href="location.html?id=loc2" style="color: var(--primary-color);">Location 2 - Fountain</a>
+        <a href="location.html?id=loc3" style="color: var(--primary-color);">Location 3 - Old Tree</a>
+      </div>
+      <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color);">
+        <a href="admin.html" style="color: var(--text-secondary);">🔐 Admin Panel</a>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Quiz - Location</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Loading state -->
+    <div id="loading-section" class="card">
+      <div class="loading">Loading question...</div>
+    </div>
+
+    <!-- Error state - no user registered -->
+    <div id="no-user-section" class="card hidden">
+      <h1>👋 Welcome!</h1>
+      <p class="subtitle">Please register first to play the game.</p>
+      <a href="index.html" class="btn btn-primary" style="display: block; text-decoration: none; text-align: center;">
+        Register Now
+      </a>
+    </div>
+
+    <!-- Error state - invalid location -->
+    <div id="invalid-location-section" class="card hidden">
+      <h1>❌ Invalid Location</h1>
+      <p class="subtitle">This QR code is not valid or the location doesn't exist.</p>
+      <a href="index.html" class="btn btn-primary" style="display: block; text-decoration: none; text-align: center;">
+        Go Home
+      </a>
+    </div>
+
+    <!-- Question section -->
+    <div id="question-section" class="card hidden">
+      <div style="text-align: center;">
+        <span class="location-badge" id="location-name">Location</span>
+      </div>
+      
+      <p class="question-text" id="question-text">Question goes here</p>
+      
+      <div id="options-container">
+        <!-- Options will be inserted here -->
+      </div>
+
+      <div id="result-container" class="hidden">
+        <div id="result-message" class="result-message"></div>
+        <a href="index.html" class="btn btn-primary" style="display: block; text-decoration: none; text-align: center; margin-top: 16px;">
+          Continue Playing
+        </a>
+      </div>
+    </div>
+
+    <!-- Already answered section -->
+    <div id="already-answered-section" class="card hidden">
+      <h1>✅ Already Answered</h1>
+      <p class="subtitle">You've already answered the question at this location!</p>
+      <div id="previous-result" class="result-message" style="margin-bottom: 16px;"></div>
+      <a href="index.html" class="btn btn-primary" style="display: block; text-decoration: none; text-align: center;">
+        Find More Locations
+      </a>
+    </div>
+  </div>
+
+  <script type="module" src="js/location.js"></script>
+</body>
+</html>

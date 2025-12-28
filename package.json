@@ -1,0 +1,13 @@
+{
+  "name": "mikigames",
+  "version": "0.1.0",
+  "description": "QR Code Quiz Game - Visit locations, scan QR codes, answer questions",
+  "type": "module",
+  "scripts": {
+    "dev": "npx serve docs -p 3000",
+    "test": "echo \"No tests configured\" && exit 0"
+  },
+  "devDependencies": {
+    "serve": "^14.2.0"
+  }
+}
