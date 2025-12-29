@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
   Container,
   Card,
@@ -101,6 +102,13 @@ export default function Admin() {
                 Login
               </Button>
             </Form>
+            <hr className="my-4" />
+            <div className="text-center">
+              <p className="text-muted mb-2">Not an admin?</p>
+              <Link to="/home" className="btn btn-outline-success w-100">
+                🎮 I'm a Player
+              </Link>
+            </div>
           </Card.Body>
         </Card>
       </Container>

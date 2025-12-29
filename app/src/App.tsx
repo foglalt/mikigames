@@ -11,12 +11,12 @@ function App() {
   return (
     <HashRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route path="/" element={<Navigate to="/admin" replace />} />
         <Route path="/home" element={<Home />} />
         <Route path="/location" element={<LocationPage />} />
         <Route path="/collection" element={<Collection />} />
         <Route path="/admin" element={<Admin />} />
-        <Route path="*" element={<Navigate to="/home" replace />} />
+        <Route path="*" element={<Navigate to="/admin" replace />} />
       </Routes>
     </HashRouter>
   );
