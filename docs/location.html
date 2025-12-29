@@ -38,8 +38,22 @@
         <span class="location-badge" id="location-name">Location</span>
       </div>
       
+      <!-- Randomization animation container -->
+      <div class="randomizer-container hidden" id="randomizer-container">
+        <div class="randomizer-label">Discovering...</div>
+        <div class="randomizer-card" id="randomizer-card">
+          <h2 class="collectible-title" id="random-title">???</h2>
+          <blockquote class="collectible-content" id="random-content">
+            "..."
+          </blockquote>
+          <p class="collectible-author" id="random-author">— ???</p>
+        </div>
+      </div>
+
+      <!-- Final revealed collectible -->
       <div class="collectible-reveal hidden" id="collectible-reveal">
-        <div class="collectible-card">
+        <div class="collectible-card discovered">
+          <div class="discovered-badge">✨ NEW ✨</div>
           <h2 class="collectible-title" id="collectible-title">Title</h2>
           <blockquote class="collectible-content" id="collectible-content">
             Content goes here

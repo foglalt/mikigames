@@ -13,6 +13,11 @@ const alreadyCollectedSection = document.getElementById('already-collected-secti
 
 const locationIcon = document.getElementById('location-icon');
 const locationNameBadge = document.getElementById('location-name');
+const randomizerContainer = document.getElementById('randomizer-container');
+const randomizerCard = document.getElementById('randomizer-card');
+const randomTitle = document.getElementById('random-title');
+const randomContent = document.getElementById('random-content');
+const randomAuthor = document.getElementById('random-author');
 const collectibleReveal = document.getElementById('collectible-reveal');
 const collectibleTitle = document.getElementById('collectible-title');
 const collectibleContent = document.getElementById('collectible-content');
@@ -30,6 +35,19 @@ let currentCollectible = null;
 let currentLocation = null;
 let currentLocationData = null;
 let currentUser = null;
+let allCollectibles = [];
+
+// Random placeholder quotes for the animation
+const placeholderQuotes = [
+  { title: "Mystery Quote", content: "The universe is full of magical things...", author: "Unknown" },
+  { title: "Hidden Wisdom", content: "Every moment is a fresh beginning...", author: "Ancient Proverb" },
+  { title: "Secret Words", content: "In the middle of difficulty lies opportunity...", author: "Wise One" },
+  { title: "Lost Knowledge", content: "The only true wisdom is knowing you know nothing...", author: "Philosopher" },
+  { title: "Ancient Truth", content: "What we think, we become...", author: "Master" },
+  { title: "Timeless Insight", content: "The journey is the reward...", author: "Traveler" },
+  { title: "Forgotten Lore", content: "Stars can't shine without darkness...", author: "Dreamer" },
+  { title: "Sacred Text", content: "Be the change you wish to see...", author: "Sage" }
+];
 
 /**
  * Get the current user from localStorage
@@ -86,6 +104,61 @@ function renderCollectible(collectible, locationData) {
 }
 
 /**
+ * Get a random quote for the animation
+ */
+function getRandomQuote() {
+  // Mix placeholder quotes with actual collectibles from other locations
+  const allQuotes = [...placeholderQuotes, ...allCollectibles];
+  return allQuotes[Math.floor(Math.random() * allQuotes.length)];
+}
+
+/**
+ * Run the randomization animation
+ */
+function runRandomizerAnimation() {
+  return new Promise((resolve) => {
+    randomizerContainer.classList.remove('hidden');
+    
+    let iterations = 0;
+    const maxIterations = 15;
+    let delay = 80;
+    
+    function animate() {
+      const quote = getRandomQuote();
+      
+      // Add shuffle animation class
+      randomizerCard.classList.add('shuffling');
+      
+      // Update content
+      randomTitle.textContent = quote.title;
+      randomContent.textContent = `"${quote.content}"`;
+      randomAuthor.textContent = `— ${quote.author}`;
+      
+      // Remove shuffle class after animation
+      setTimeout(() => {
+        randomizerCard.classList.remove('shuffling');
+      }, delay * 0.8);
+      
+      iterations++;
+      
+      if (iterations < maxIterations) {
+        // Slow down towards the end
+        delay = 80 + (iterations * 15);
+        setTimeout(animate, delay);
+      } else {
+        // Final reveal
+        setTimeout(() => {
+          randomizerCard.classList.add('final-shuffle');
+          setTimeout(resolve, 300);
+        }, 200);
+      }
+    }
+    
+    animate();
+  });
+}
+
+/**
  * Handle collecting the item
  */
 async function handleCollect() {
@@ -93,11 +166,18 @@ async function handleCollect() {
   
   // Disable button to prevent double-clicks
   collectBtn.disabled = true;
-  collectBtn.textContent = 'Collecting...';
+  collectBtn.textContent = '🎲 Discovering...';
   
-  // Reveal the collectible with animation
+  // Run the randomization animation
+  await runRandomizerAnimation();
+  
+  // Hide randomizer, show actual collectible
+  randomizerContainer.classList.add('hidden');
   collectibleReveal.classList.remove('hidden');
   collectibleReveal.classList.add('reveal-animation');
+  
+  // Hide button
+  collectBtn.classList.add('hidden');
   
   // Record the collection
   await recordCollection({
@@ -112,9 +192,8 @@ async function handleCollect() {
   
   // Show success after a delay
   setTimeout(() => {
-    collectBtn.classList.add('hidden');
     successMessage.classList.remove('hidden');
-  }, 1000);
+  }, 1500);
 }
 
 /**
@@ -158,6 +237,13 @@ async function init() {
     showSection(invalidLocationSection);
     return;
   }
+  
+  // Store all collectibles for randomization animation
+  allCollectibles = Object.values(data.locations).map(loc => ({
+    title: loc.collectible.title,
+    content: loc.collectible.content,
+    author: loc.collectible.author
+  }));
   
   // Get location data and collectible
   currentLocationData = data.locations[currentLocation];
