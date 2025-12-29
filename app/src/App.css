@@ -1,0 +1,41 @@
+/* Custom styles for Quote Collector */
+
+body {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+/* Make blockquote footer smaller */
+.blockquote-footer {
+  font-size: 0.875rem;
+}
+
+/* Smooth transitions for cards */
+.card {
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+/* Progress bar animation */
+.progress-bar {
+  transition: width 0.6s ease;
+}
+
+/* Mobile improvements */
+@media (max-width: 576px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .display-4 {
+    font-size: 2rem;
+  }
+  
+  .display-1 {
+    font-size: 4rem;
+  }
+}

@@ -21,10 +21,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./app
+        run: npm ci
+
       - name: Inject admin password
         run: |
           # Replace the placeholder with the actual password from secrets
-          sed -i "s/__ADMIN_PASSWORD_PLACEHOLDER__/${{ secrets.ADMIN_PASSWORD }}/g" docs/js/admin.js
+          sed -i "s/__ADMIN_PASSWORD_PLACEHOLDER__/${{ secrets.ADMIN_PASSWORD }}/g" app/src/config.ts
+
+      - name: Build
+        working-directory: ./app
+        run: npm run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -32,7 +47,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './docs'
+          path: "./docs"
 
   deploy:
     environment:

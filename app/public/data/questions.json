@@ -1,0 +1,39 @@
+{
+  "gameTitle": "Quote Collector",
+  "gameDescription": "Visit all locations to collect inspiring quotes!",
+  "locations": {
+    "a7b3d8e2-4f1c-9a6b-3e5d-8c2f1a9b7e4d": {
+      "name": "Park Entrance",
+      "icon": "🌳",
+      "collectible": {
+        "id": "quote1",
+        "type": "quote",
+        "title": "The Journey Begins",
+        "content": "The journey of a thousand miles begins with a single step.",
+        "author": "Lao Tzu"
+      }
+    },
+    "c9f2e1a8-7d3b-4c6e-a5f8-2b9d1e7c3a6f": {
+      "name": "Fountain",
+      "icon": "⛲",
+      "collectible": {
+        "id": "quote2",
+        "type": "quote",
+        "title": "Stay Curious",
+        "content": "The important thing is not to stop questioning. Curiosity has its own reason for existing.",
+        "author": "Albert Einstein"
+      }
+    },
+    "e5d4c3b2-1a9f-8e7d-6c5b-4a3f2e1d9c8b": {
+      "name": "Old Tree",
+      "icon": "🌲",
+      "collectible": {
+        "id": "quote3",
+        "type": "quote",
+        "title": "Embrace Change",
+        "content": "The only way to make sense out of change is to plunge into it, move with it, and join the dance.",
+        "author": "Alan Watts"
+      }
+    }
+  }
+}
