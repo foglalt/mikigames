@@ -1,8 +1,19 @@
-// Admin page logic
+// Admin page logic with password protection
 
 import { getCollections, getStatistics, getCollectionsByUser, clearAllCollections } from './firebase.js';
 
+// Admin password - replaced by GitHub Actions during deployment
+const ADMIN_PASSWORD = '__ADMIN_PASSWORD_PLACEHOLDER__';
+const SESSION_KEY = 'qr_admin_session';
+
 // Get DOM elements
+const loginSection = document.getElementById('login-section');
+const adminSection = document.getElementById('admin-section');
+const loginForm = document.getElementById('login-form');
+const passwordInput = document.getElementById('password');
+const loginError = document.getElementById('login-error');
+const logoutBtn = document.getElementById('logout-btn');
+
 const totalUsersEl = document.getElementById('total-users');
 const totalCollectionsEl = document.getElementById('total-collections');
 const loadingEl = document.getElementById('loading');
@@ -12,6 +23,57 @@ const collectionsBody = document.getElementById('collections-body');
 const userSummaryContainer = document.getElementById('user-summary-container');
 const refreshBtn = document.getElementById('refresh-btn');
 const clearBtn = document.getElementById('clear-btn');
+
+/**
+ * Check if user is authenticated
+ */
+function isAuthenticated() {
+  const session = sessionStorage.getItem(SESSION_KEY);
+  return session === 'authenticated';
+}
+
+/**
+ * Handle login
+ */
+function handleLogin(e) {
+  e.preventDefault();
+  const enteredPassword = passwordInput.value;
+  
+  if (enteredPassword === ADMIN_PASSWORD) {
+    sessionStorage.setItem(SESSION_KEY, 'authenticated');
+    showAdminSection();
+    loginError.classList.add('hidden');
+  } else {
+    loginError.classList.remove('hidden');
+    passwordInput.value = '';
+    passwordInput.focus();
+  }
+}
+
+/**
+ * Handle logout
+ */
+function handleLogout() {
+  sessionStorage.removeItem(SESSION_KEY);
+  showLoginSection();
+}
+
+/**
+ * Show the login section
+ */
+function showLoginSection() {
+  loginSection.classList.remove('hidden');
+  adminSection.classList.add('hidden');
+}
+
+/**
+ * Show the admin section
+ */
+function showAdminSection() {
+  loginSection.classList.add('hidden');
+  adminSection.classList.remove('hidden');
+  loadData();
+}
 
 /**
  * Format timestamp to readable date
@@ -101,6 +163,8 @@ function escapeHtml(text) {
  * Set up event listeners
  */
 function setupEventListeners() {
+  loginForm.addEventListener('submit', handleLogin);
+  logoutBtn.addEventListener('click', handleLogout);
   refreshBtn.addEventListener('click', loadData);
   
   clearBtn.addEventListener('click', () => {
@@ -115,8 +179,14 @@ function setupEventListeners() {
  * Initialize the admin page
  */
 function init() {
-  loadData();
   setupEventListeners();
+  
+  // Check if already authenticated
+  if (isAuthenticated()) {
+    showAdminSection();
+  } else {
+    showLoginSection();
+  }
 }
 
 // Initialize when DOM is ready

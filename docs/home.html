@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quote Collector</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Welcome back section for returning users -->
+    <div id="welcome-back" class="welcome-back hidden">
+      Welcome back, <span id="current-username"></span>! 👋
+    </div>
+
+    <!-- Registration form for new users -->
+    <div id="registration-section" class="card">
+      <h1>📚 Quote Collector</h1>
+      <p class="subtitle">Enter your name to start collecting!</p>
+      
+      <form id="registration-form">
+        <div class="form-group">
+          <label for="username">Your Name</label>
+          <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            placeholder="Enter your name..."
+            required
+            minlength="2"
+            maxlength="30"
+          >
+        </div>
+        <button type="submit" class="btn btn-primary">Start Collecting</button>
+      </form>
+    </div>
+
+    <!-- Instructions for registered users -->
+    <div id="instructions-section" class="card hidden">
+      <h1>Ready to Collect! ✨</h1>
+      <p class="subtitle">Scan QR codes to collect inspiring quotes</p>
+      
+      <div style="text-align: center; padding: 20px;">
+        <p style="margin-bottom: 16px;">Find the QR codes at different locations and scan them with your phone camera.</p>
+        <p style="color: var(--text-secondary);">Each location has a unique quote for you to collect!</p>
+      </div>
+
+      <a href="collection.html" class="btn btn-primary" style="display: block; text-decoration: none; text-align: center; margin-bottom: 12px;">
+        📖 View My Collection
+      </a>
+
+      <button id="change-user-btn" class="btn btn-secondary">
+        Change Username
+      </button>
+    </div>
+
+    <!-- Test links for development -->
+    <div class="card" style="margin-top: 20px;">
+      <h2>📍 Test Locations</h2>
+      <p style="margin-bottom: 16px; color: var(--text-secondary);">Click to simulate scanning QR codes:</p>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <a href="location.html?id=a7b3d8e2-4f1c-9a6b-3e5d-8c2f1a9b7e4d" class="location-link">🌳 Park Entrance</a>
+        <a href="location.html?id=c9f2e1a8-7d3b-4c6e-a5f8-2b9d1e7c3a6f" class="location-link">⛲ Fountain</a>
+        <a href="location.html?id=e5d4c3b2-1a9f-8e7d-6c5b-4a3f2e1d9c8b" class="location-link">🌲 Old Tree</a>
+      </div>
+      <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color);">
+        <a href="index.html" style="color: var(--text-secondary);">🔐 Admin Panel</a>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
