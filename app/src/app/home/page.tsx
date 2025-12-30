@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import useSWR from "swr";
 import { useRouter } from "next/navigation";
 import { Container, Card, Form, Button } from "react-bootstrap";
 import { getUser, setUser, registerUser } from "@/services/storage";
@@ -10,17 +11,17 @@ import type { User, LocationsData } from "@/types";
 export default function HomePage() {
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
-  const [data, setData] = useState<LocationsData | null>(null);
+  const { data } = useSWR<LocationsData | null>(
+    "locations",
+    loadLocationsData
+  );
   const router = useRouter();
 
   useEffect(() => {
     const user = getUser();
     if (user) {
       router.push("/collection");
-      return;
     }
-
-    loadLocationsData().then(setData);
   }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {

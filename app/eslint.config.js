@@ -13,9 +13,6 @@ export default defineConfig([
       tseslint.configs.recommended,
       reactHooks.configs.flat.recommended,
     ],
-    rules: {
-      'react-hooks/set-state-in-effect': 'off',
-    },
     languageOptions: {
       ecmaVersion: 2020,
       globals: {

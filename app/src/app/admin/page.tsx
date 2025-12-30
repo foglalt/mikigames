@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import useSWR from "swr";
 import Link from "next/link";
 import {
   Container,
@@ -26,59 +27,43 @@ import { loadLocationsData, getLocationCount } from "@/services/data";
 import type { Statistics, UserSummary, LocationsData } from "@/types";
 
 export default function AdminPage() {
-  const [authenticated, setAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [stats, setStats] = useState<Statistics | null>(null);
-  const [users, setUsers] = useState<UserSummary[]>([]);
-  const [data, setData] = useState<LocationsData | null>(null);
-  const [origin, setOrigin] = useState("");
+  const { data: session, mutate: mutateSession } = useSWR<{
+    authenticated: boolean;
+  }>(
+    "admin-session",
+    getAdminSession,
+    { revalidateOnFocus: false }
+  );
+  const authenticated = session?.authenticated ?? false;
 
-  const loadData = async () => {
-    const [statsData, usersData, locationsData] = await Promise.all([
-      getStatistics(),
-      getCollectionsByUser(),
-      loadLocationsData(),
-    ]);
-
-    setStats(statsData);
-    setUsers(usersData);
-    setData(locationsData);
-  };
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const checkSession = async () => {
-      const session = await getAdminSession();
-      if (isMounted) {
-        setAuthenticated(session.authenticated);
-      }
-    };
-
-    void checkSession();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    setOrigin(window.location.origin);
-  }, []);
-
-  useEffect(() => {
-    if (authenticated) {
-      void loadData();
-    }
-  }, [authenticated]);
+  const { data: stats, mutate: mutateStats } = useSWR<Statistics>(
+    authenticated ? "admin-stats" : null,
+    getStatistics
+  );
+  const { data: users, mutate: mutateUsers } = useSWR<UserSummary[]>(
+    authenticated ? "admin-collections" : null,
+    getCollectionsByUser
+  );
+  const { data } = useSWR<LocationsData | null>(
+    authenticated ? "locations" : null,
+    loadLocationsData
+  );
+  const { data: runtimeOrigin } = useSWR(
+    authenticated ? "origin" : null,
+    () => window.location.origin,
+    { revalidateOnFocus: false }
+  );
+  const origin = runtimeOrigin ?? "";
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const result = await adminLogin(password);
     if (result) {
-      setAuthenticated(true);
       setError("");
+      await mutateSession();
     } else {
       setError("Invalid password");
     }
@@ -86,7 +71,7 @@ export default function AdminPage() {
 
   const handleLogout = async () => {
     await adminLogout();
-    setAuthenticated(false);
+    await mutateSession({ authenticated: false }, { revalidate: false });
     setPassword("");
   };
 
@@ -97,7 +82,7 @@ export default function AdminPage() {
       )
     ) {
       await clearAllCollections();
-      await loadData();
+      await Promise.all([mutateStats(), mutateUsers()]);
     }
   };
 
@@ -145,6 +130,7 @@ export default function AdminPage() {
   }
 
   const totalLocations = data ? getLocationCount(data) : 0;
+  const userList = users ?? [];
 
   return (
     <Container className="py-5">
@@ -199,7 +185,7 @@ export default function AdminPage() {
           </Button>
         </Card.Header>
         <Card.Body>
-          {users.length === 0 ? (
+          {userList.length === 0 ? (
             <Alert variant="info" className="mb-0">
               No collections yet. Users will appear here when they start
               collecting quotes.
@@ -215,7 +201,7 @@ export default function AdminPage() {
                 </tr>
               </thead>
               <tbody>
-                {users.map((user) => (
+                {userList.map((user) => (
                   <tr key={user.username}>
                     <td>{user.username}</td>
                     <td>

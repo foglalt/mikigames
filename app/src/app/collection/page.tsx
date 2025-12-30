@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useMemo } from "react";
+import useSWR from "swr";
 import { useRouter } from "next/navigation";
 import {
   Container,
@@ -11,6 +12,7 @@ import {
   Badge,
   Button,
   Alert,
+  Spinner,
 } from "react-bootstrap";
 import {
   getUser,
@@ -18,55 +20,28 @@ import {
   clearUser,
 } from "@/services/storage";
 import { loadLocationsData, getLocationCount } from "@/services/data";
-import type { CollectionItem, CollectionProgress as Progress } from "@/types";
+import type { CollectionProgress as Progress } from "@/types";
 
 export default function CollectionPage() {
   const router = useRouter();
-  const [items, setItems] = useState<CollectionItem[]>([]);
-  const [progress, setProgress] = useState<Progress | null>(null);
-  const [username, setUsername] = useState("");
+  const { data: user } = useSWR("user", getUser, {
+    revalidateOnFocus: false,
+  });
+  const username = user?.username;
+  const { data: items } = useSWR(
+    username ? ["collection", username] : null,
+    () => getUserCollection(username!)
+  );
+  const { data: locationsData } = useSWR(
+    "locations",
+    loadLocationsData
+  );
 
   useEffect(() => {
-    let isMounted = true;
-
-    const loadCollection = async () => {
-      const user = getUser();
-      if (!user) {
-        router.push("/home");
-        return;
-      }
-
-      if (isMounted) {
-        setUsername(user.username);
-      }
-
-      const userItems = await getUserCollection(user.username);
-      if (isMounted) {
-        setItems(userItems);
-      }
-
-      const data = await loadLocationsData();
-      if (data && isMounted) {
-        const totalLocations = getLocationCount(data);
-        const collected = userItems.length;
-        const percentage =
-          totalLocations > 0
-            ? Math.round((collected / totalLocations) * 100)
-            : 0;
-        setProgress({
-          collected,
-          total: totalLocations,
-          remaining: totalLocations - collected,
-          percentage,
-        });
-      }
-    };
-
-    void loadCollection();
-    return () => {
-      isMounted = false;
-    };
-  }, [router]);
+    if (user === null) {
+      router.push("/home");
+    }
+  }, [router, user]);
 
   const handleLogout = () => {
     clearUser();
@@ -78,6 +53,47 @@ export default function CollectionPage() {
     if (percentage >= 50) return "info";
     return "warning";
   };
+
+  const progress = useMemo<Progress | null>(() => {
+    if (!locationsData) {
+      return null;
+    }
+
+    const totalLocations = getLocationCount(locationsData);
+    const collected = items ? items.length : 0;
+    const percentage =
+      totalLocations > 0
+        ? Math.round((collected / totalLocations) * 100)
+        : 0;
+    return {
+      collected,
+      total: totalLocations,
+      remaining: totalLocations - collected,
+      percentage,
+    };
+  }, [items, locationsData]);
+
+  const isLoading =
+    user === undefined ||
+    user === null ||
+    (username ? items === undefined : false) ||
+    locationsData === undefined;
+
+  if (isLoading) {
+    return (
+      <Container className="py-5 text-center">
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </Container>
+    );
+  }
+
+  if (!user || !username) {
+    return null;
+  }
+
+  const itemsList = items ?? [];
 
   return (
     <Container className="py-5">
@@ -121,7 +137,7 @@ export default function CollectionPage() {
         </Card>
       )}
 
-      {items.length === 0 ? (
+      {itemsList.length === 0 ? (
         <Alert variant="info" className="text-center">
           <Alert.Heading>No quotes yet!</Alert.Heading>
           <p>
@@ -131,7 +147,7 @@ export default function CollectionPage() {
         </Alert>
       ) : (
         <Row xs={1} md={2} className="g-4">
-          {items.map((item) => (
+          {itemsList.map((item) => (
             <Col key={item.id}>
               <Card className="h-100">
                 <Card.Header className="d-flex justify-content-between align-items-center">

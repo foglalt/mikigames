@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import useSWR from "swr";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Container, Card, Button, Alert, Spinner } from "react-bootstrap";
@@ -18,10 +19,27 @@ export default function LocationPage() {
   const router = useRouter();
   const locationId = searchParams.get("id");
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [location, setLocation] = useState<Location | null>(null);
-  const [alreadyCollected, setAlreadyCollected] = useState(false);
+  const { data: user } = useSWR("user", getUser, {
+    revalidateOnFocus: false,
+  });
+  const username = user?.username;
+  const { data: locationsData } = useSWR(
+    "locations",
+    loadLocationsData
+  );
+  const location = useMemo<Location | null>(() => {
+    if (!locationId || !locationsData) {
+      return null;
+    }
+
+    return locationsData.locations[locationId] ?? null;
+  }, [locationId, locationsData]);
+  const shouldCheckCollected = Boolean(username && locationId);
+  const { data: collected } = useSWR(
+    shouldCheckCollected ? ["collection-exists", username, locationId] : null,
+    () => hasUserCollectedLocation(username!, locationId ?? "")
+  );
+  const [localAlreadyCollected, setLocalAlreadyCollected] = useState(false);
   const [isRevealing, setIsRevealing] = useState(false);
   const [currentDisplay, setCurrentDisplay] = useState<Collectible | null>(
     null
@@ -29,68 +47,31 @@ export default function LocationPage() {
   const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
-    let isMounted = true;
+    if (user === null) {
+      router.push("/home");
+    }
+  }, [router, user]);
 
-    const loadLocation = async () => {
-      const user = getUser();
-      if (!user) {
-        router.push("/home");
-        return;
-      }
+  const alreadyCollected = Boolean(collected) || localAlreadyCollected;
+  const displayItem =
+    currentDisplay ?? (alreadyCollected && location ? location.collectible : null);
+  const isRevealed = revealed || alreadyCollected;
 
-      if (!locationId) {
-        if (isMounted) {
-          setError("No location specified");
-          setLoading(false);
-        }
-        return;
-      }
-
-      const data = await loadLocationsData();
-      if (!data) {
-        if (isMounted) {
-          setError("Failed to load game data");
-          setLoading(false);
-        }
-        return;
-      }
-
-      const loc = data.locations[locationId];
-      if (!loc) {
-        if (isMounted) {
-          setError("Location not found");
-          setLoading(false);
-        }
-        return;
-      }
-
-      if (isMounted) {
-        setLocation(loc);
-      }
-
-      const existing = await hasUserCollectedLocation(
-        user.username,
-        locationId
-      );
-      if (existing && isMounted) {
-        setAlreadyCollected(true);
-        setCurrentDisplay(loc.collectible);
-        setRevealed(true);
-      }
-
-      if (isMounted) {
-        setLoading(false);
-      }
-    };
-
-    void loadLocation();
-    return () => {
-      isMounted = false;
-    };
-  }, [locationId, router]);
+  const pageError = !locationId
+    ? "No location specified"
+    : locationsData === null
+      ? "Failed to load game data"
+      : locationsData && !location
+        ? "Location not found"
+        : "";
+  const isLoading =
+    !pageError &&
+    (user === undefined ||
+      user === null ||
+      locationsData === undefined ||
+      (shouldCheckCollected && collected === undefined));
 
   const handleCollect = async () => {
-    const user = getUser();
     if (!user || !location || !locationId) return;
 
     setIsRevealing(true);
@@ -115,7 +96,7 @@ export default function LocationPage() {
           collectibleAuthor: location.collectible.author,
         }).then((saved) => {
           if (!saved) {
-            setAlreadyCollected(true);
+            setLocalAlreadyCollected(true);
           }
         });
         return;
@@ -141,7 +122,7 @@ export default function LocationPage() {
     runAnimation();
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Container className="py-5 text-center">
         <Spinner animation="border" role="status">
@@ -151,12 +132,12 @@ export default function LocationPage() {
     );
   }
 
-  if (error) {
+  if (pageError) {
     return (
       <Container className="py-5">
         <Alert variant="danger" className="text-center">
           <Alert.Heading>Oops!</Alert.Heading>
-          <p>{error}</p>
+          <p>{pageError}</p>
           <Link href="/collection" className="btn btn-primary">
             Go to Collection
           </Link>
@@ -172,7 +153,7 @@ export default function LocationPage() {
         <h1 className="h2 mt-3">{location?.name}</h1>
       </div>
 
-      {!revealed && !isRevealing && (
+      {!isRevealed && !isRevealing && (
         <Card className="mx-auto text-center" style={{ maxWidth: "400px" }}>
           <Card.Body className="p-4">
             <div className="mystery-box mb-4">
@@ -190,15 +171,15 @@ export default function LocationPage() {
         </Card>
       )}
 
-      {(isRevealing || revealed) && currentDisplay && (
+      {(isRevealing || isRevealed) && displayItem && (
         <Card
           className={`mx-auto quote-card ${
-            revealed ? "revealed" : "shuffling"
+            isRevealed ? "revealed" : "shuffling"
           }`}
           style={{ maxWidth: "500px" }}
         >
           <Card.Body className="p-4">
-            {revealed && !alreadyCollected && (
+            {isRevealed && !alreadyCollected && (
               <div className="text-center mb-3">
                 <span className="badge bg-success">New Quote Collected</span>
               </div>
@@ -211,11 +192,11 @@ export default function LocationPage() {
               </div>
             )}
 
-            <h4 className="text-center mb-3">{currentDisplay.title}</h4>
+            <h4 className="text-center mb-3">{displayItem.title}</h4>
             <blockquote className="blockquote text-center">
-              <p className="mb-3">"{currentDisplay.content}"</p>
+              <p className="mb-3">"{displayItem.content}"</p>
               <footer className="blockquote-footer">
-                {currentDisplay.author}
+                {displayItem.author}
               </footer>
             </blockquote>
           </Card.Body>
