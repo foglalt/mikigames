@@ -5,12 +5,11 @@ A mobile-friendly collection game where users visit physical locations, scan QR 
 ## Features
 
 - Mobile-first design for scanning QR codes on phones
-- User tracking by username on each device
-- Collect unique quotes at physical locations
-- View your collection and remaining locations
-- Admin dashboard to see all collections
-- Progress tracking with a completion bar
-- Static hosting on GitHub Pages
+- Username-based registration per device
+- Cross-device collections stored in a shared database
+- Admin dashboard for live progress
+- Progress tracking with completion stats
+- Next.js frontend + API layer (Vercel-ready)
 
 ## How It Works
 
@@ -24,13 +23,14 @@ A mobile-friendly collection game where users visit physical locations, scan QR 
 
 ```
 app/
+  db/
+    schema.sql         # Neon schema
   public/
     data/
-      questions.json  # Collectibles database
+      questions.json   # Collectibles database
   src/
-    pages/            # App pages
-    services/         # Firebase + storage helpers
-docs/                 # Build output (GitHub Pages)
+    app/               # Next.js app routes + API
+    services/          # Client data helpers
 ```
 
 ## Setup
@@ -45,55 +45,21 @@ npm run dev
 
 Open http://localhost:3000 in your browser.
 
-### Firebase Configuration
+### Environment
 
-This app uses Firebase Firestore for cross-device collections. Create a Firebase project and add these build-time variables (they are public, not secrets):
+Copy `app/.env.example` to `app/.env` and set:
 
-- `VITE_FIREBASE_API_KEY`
-- `VITE_FIREBASE_AUTH_DOMAIN`
-- `VITE_FIREBASE_PROJECT_ID`
-- `VITE_FIREBASE_STORAGE_BUCKET`
-- `VITE_FIREBASE_MESSAGING_SENDER_ID`
-- `VITE_FIREBASE_APP_ID`
+- `DATABASE_URL` (Neon connection string)
+- `ADMIN_PASSWORD`
+- `ADMIN_SESSION_SECRET`
 
-You can set them locally in an `.env` file inside `app/` and in GitHub Actions secrets or variables for deployment.
+### Database Setup
 
-### Admin Password
-
-Set the `ADMIN_PASSWORD` GitHub secret. It is embedded into the client bundle at build time, so treat it as a lightweight gate rather than secure authentication.
-
-### Deploy to GitHub Pages
-
-1. Push the code to GitHub
-2. Go to **Settings** -> **Pages**
-3. Set **Source** to "GitHub Actions"
-4. Ensure the `Deploy to GitHub Pages` workflow runs on `main`
-
-Your site will be available at `https://your-username.github.io/your-repo-name/`
+Run the SQL in `app/db/schema.sql` against your Neon database.
 
 ## Customizing Collectibles
 
-Edit `app/public/data/questions.json` to add your own locations and collectibles:
-
-```json
-{
-  "gameTitle": "Quote Collector",
-  "gameDescription": "Visit all locations to collect inspiring quotes!",
-  "locations": {
-    "a7b3d8e2-4f1c-9a6b-3e5d-8c2f1a9b7e4d": {
-      "name": "Park Entrance",
-      "icon": "??",
-      "collectible": {
-        "id": "quote1",
-        "type": "quote",
-        "title": "The Journey Begins",
-        "content": "The journey of a thousand miles begins with a single step.",
-        "author": "Lao Tzu"
-      }
-    }
-  }
-}
-```
+Edit `app/public/data/questions.json` to add your own locations and collectibles.
 
 Note: Location IDs use GUIDs to prevent users from guessing URLs. Generate new GUIDs for each location using an online generator or your programming language's UUID library.
 
@@ -102,7 +68,7 @@ Note: Location IDs use GUIDs to prevent users from guessing URLs. Generate new G
 For each location, create a QR code pointing to:
 
 ```
-https://your-site.github.io/your-repo/#/location?id=a7b3d8e2-4f1c-9a6b-3e5d-8c2f1a9b7e4d
+https://your-site.example.com/location?id=a7b3d8e2-4f1c-9a6b-3e5d-8c2f1a9b7e4d
 ```
 
 You can use any QR code generator like:
@@ -111,11 +77,11 @@ You can use any QR code generator like:
 
 ## Data Storage
 
-Collections are stored in Firebase Firestore, which means:
+Collections and users are stored in Neon (Postgres), which means:
 - Users on different devices contribute to the same dataset
 - The admin dashboard aggregates results across devices
 
-Usernames are still stored locally per device for a lightweight sign-in. If you need real authentication, add Firebase Auth and lock down Firestore rules.
+Usernames are still stored locally per device for a lightweight sign-in. If you need real authentication, add a user identity provider and lock down admin access.
 
 ## License
 

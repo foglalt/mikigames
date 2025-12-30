@@ -1,56 +1,30 @@
-// Storage service for managing collections and user data
+// Storage service for user identity and API calls
 
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  limit,
-  query,
-  setDoc,
-  where,
-  writeBatch,
-} from "firebase/firestore";
-import type {
-  CollectionItem,
-  User,
-  Statistics,
-  UserSummary,
-  CollectionProgress,
-} from "../types";
-import { db } from "./firebase";
+import type { CollectionItem, User, Statistics, UserSummary } from "../types";
 
 const USER_KEY = "qr_quiz_user";
-const SESSION_KEY = "qr_admin_session";
-const COLLECTIONS_COLLECTION = "collections";
 
-function makeCollectionId(username: string, locationId: string): string {
-  return `${encodeURIComponent(username)}__${locationId}`;
-}
+async function apiRequest<T>(
+  url: string,
+  options: RequestInit = {}
+): Promise<T> {
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+    },
+    credentials: "include",
+  });
 
-function normalizeCollectionItem(
-  id: string,
-  data: Omit<CollectionItem, "id"> & { timestamp?: unknown }
-): CollectionItem {
-  const rawTimestamp = data.timestamp;
-  const timestamp =
-    typeof rawTimestamp === "string"
-      ? rawTimestamp
-      : typeof (rawTimestamp as { toDate?: () => Date })?.toDate === "function"
-      ? (rawTimestamp as { toDate: () => Date }).toDate().toISOString()
-      : new Date(0).toISOString();
+  if (!response.ok) {
+    const payload = await response.json().catch(() => ({}));
+    const message =
+      typeof payload?.error === "string" ? payload.error : "Request failed";
+    throw new Error(message);
+  }
 
-  return {
-    id,
-    username: data.username,
-    locationId: data.locationId,
-    locationName: data.locationName,
-    collectibleId: data.collectibleId,
-    collectibleTitle: data.collectibleTitle,
-    collectibleContent: data.collectibleContent,
-    collectibleAuthor: data.collectibleAuthor,
-    timestamp,
-  };
+  return response.json() as Promise<T>;
 }
 
 // User functions
@@ -71,30 +45,20 @@ export function clearUser(): void {
   localStorage.removeItem(USER_KEY);
 }
 
-// Collection functions
-export async function getCollections(): Promise<CollectionItem[]> {
-  try {
-    const snapshot = await getDocs(collection(db, COLLECTIONS_COLLECTION));
-    return snapshot.docs.map((docSnap) =>
-      normalizeCollectionItem(docSnap.id, docSnap.data() as CollectionItem)
-    );
-  } catch (error) {
-    console.error("Failed to load collections:", error);
-    return [];
-  }
+export async function registerUser(username: string): Promise<User> {
+  return apiRequest<User>("/api/users/register", {
+    method: "POST",
+    body: JSON.stringify({ username }),
+  });
 }
 
+// Collection functions
 export async function getUserCollection(
   username: string
 ): Promise<CollectionItem[]> {
   try {
-    const q = query(
-      collection(db, COLLECTIONS_COLLECTION),
-      where("username", "==", username)
-    );
-    const snapshot = await getDocs(q);
-    return snapshot.docs.map((docSnap) =>
-      normalizeCollectionItem(docSnap.id, docSnap.data() as CollectionItem)
+    return await apiRequest<CollectionItem[]>(
+      `/api/collection?username=${encodeURIComponent(username)}`
     );
   } catch (error) {
     console.error("Failed to load user collection:", error);
@@ -105,24 +69,17 @@ export async function getUserCollection(
 export async function hasUserCollectedLocation(
   username: string,
   locationId: string
-): Promise<CollectionItem | undefined> {
+): Promise<boolean> {
   try {
-    const q = query(
-      collection(db, COLLECTIONS_COLLECTION),
-      where("username", "==", username),
-      where("locationId", "==", locationId),
-      limit(1)
+    const data = await apiRequest<{ exists: boolean }>(
+      `/api/collection/exists?username=${encodeURIComponent(
+        username
+      )}&locationId=${encodeURIComponent(locationId)}`
     );
-    const snapshot = await getDocs(q);
-    const docSnap = snapshot.docs[0];
-    if (!docSnap) return undefined;
-    return normalizeCollectionItem(
-      docSnap.id,
-      docSnap.data() as CollectionItem
-    );
+    return data.exists;
   } catch (error) {
     console.error("Failed to check collection status:", error);
-    return undefined;
+    return false;
   }
 }
 
@@ -130,97 +87,74 @@ export async function recordCollection(
   item: Omit<CollectionItem, "id" | "timestamp">
 ): Promise<boolean> {
   try {
-    const docId = makeCollectionId(item.username, item.locationId);
-    const docRef = doc(db, COLLECTIONS_COLLECTION, docId);
-    const existing = await getDoc(docRef);
-    if (existing.exists()) {
-      return false;
-    }
-
-    await setDoc(docRef, {
-      ...item,
-      id: docId,
-      timestamp: new Date().toISOString(),
+    const data = await apiRequest<{ created: boolean }>("/api/collection", {
+      method: "POST",
+      body: JSON.stringify(item),
     });
-
-    return true;
+    return data.created;
   } catch (error) {
     console.error("Failed to record collection:", error);
     return false;
   }
 }
 
-export async function getCollectionProgress(
-  username: string,
-  totalLocations: number
-): Promise<CollectionProgress> {
-  const userCollection = await getUserCollection(username);
-  return {
-    collected: userCollection.length,
-    total: totalLocations,
-    remaining: totalLocations - userCollection.length,
-    percentage:
-      totalLocations > 0
-        ? Math.round((userCollection.length / totalLocations) * 100)
-        : 0,
-  };
+// Statistics functions
+export async function getStatistics(): Promise<Statistics> {
+  try {
+    return await apiRequest<Statistics>("/api/admin/stats");
+  } catch (error) {
+    console.error("Failed to load statistics:", error);
+    return { totalUsers: 0, totalCollections: 0 };
+  }
+}
+
+export async function getCollectionsByUser(): Promise<UserSummary[]> {
+  try {
+    return await apiRequest<UserSummary[]>("/api/admin/collections");
+  } catch (error) {
+    console.error("Failed to load collections by user:", error);
+    return [];
+  }
 }
 
 export async function clearAllCollections(): Promise<void> {
   try {
-    const snapshot = await getDocs(collection(db, COLLECTIONS_COLLECTION));
-    const batch = writeBatch(db);
-    snapshot.docs.forEach((docSnap) => {
-      batch.delete(docSnap.ref);
-    });
-    await batch.commit();
+    await apiRequest("/api/admin/collections", { method: "DELETE" });
   } catch (error) {
     console.error("Failed to clear collections:", error);
   }
 }
 
-// Statistics functions
-export async function getStatistics(): Promise<Statistics> {
-  const collections = await getCollections();
-  const uniqueUsers = new Set(collections.map((c) => c.username));
-
-  return {
-    totalUsers: uniqueUsers.size,
-    totalCollections: collections.length,
-  };
-}
-
-export async function getCollectionsByUser(): Promise<UserSummary[]> {
-  const collections = await getCollections();
-  const userMap: Record<string, UserSummary> = {};
-
-  collections.forEach((item) => {
-    if (!userMap[item.username]) {
-      userMap[item.username] = {
-        username: item.username,
-        items: [],
-        totalCount: 0,
-      };
-    }
-    userMap[item.username].items.push(item);
-    userMap[item.username].totalCount++;
-  });
-
-  return Object.values(userMap);
-}
-
 // Admin session functions
-export function isAuthenticated(): boolean {
-  return sessionStorage.getItem(SESSION_KEY) === "authenticated";
-}
-
-export function setAuthenticated(value: boolean): void {
-  if (value) {
-    sessionStorage.setItem(SESSION_KEY, "authenticated");
-  } else {
-    sessionStorage.removeItem(SESSION_KEY);
+export async function adminLogin(password: string): Promise<boolean> {
+  try {
+    const data = await apiRequest<{ authenticated: boolean }>(
+      "/api/admin/login",
+      {
+        method: "POST",
+        body: JSON.stringify({ password }),
+      }
+    );
+    return data.authenticated;
+  } catch (error) {
+    console.error("Failed to login:", error);
+    return false;
   }
 }
 
-// Utility
-// Firestore document ids handle uniqueness.
+export async function adminLogout(): Promise<void> {
+  try {
+    await apiRequest("/api/admin/logout", { method: "POST" });
+  } catch (error) {
+    console.error("Failed to logout:", error);
+  }
+}
+
+export async function getAdminSession(): Promise<{ authenticated: boolean }> {
+  try {
+    return await apiRequest<{ authenticated: boolean }>("/api/admin/session");
+  } catch (error) {
+    console.error("Failed to fetch admin session:", error);
+    return { authenticated: false };
+  }
+}

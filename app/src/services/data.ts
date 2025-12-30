@@ -10,9 +10,7 @@ export async function loadLocationsData(): Promise<LocationsData | null> {
   }
 
   try {
-    const response = await fetch(
-      `${import.meta.env.BASE_URL}data/questions.json`
-    );
+    const response = await fetch("/data/questions.json");
     if (!response.ok) throw new Error("Failed to load data");
     cachedData = await response.json();
     return cachedData;

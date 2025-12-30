@@ -1,8 +1,3 @@
-// App configuration
-
-// Admin password - replaced by GitHub Actions during deployment
-export const ADMIN_PASSWORD = "__ADMIN_PASSWORD_PLACEHOLDER__";
-
 // Placeholder quotes for randomization animation
 export const PLACEHOLDER_QUOTES = [
   {
