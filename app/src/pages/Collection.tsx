@@ -13,7 +13,6 @@ import {
 import {
   getUser,
   getUserCollection,
-  getCollectionProgress,
   clearUser,
 } from "../services/storage";
 import { loadLocationsData, getLocationCount } from "../services/data";
@@ -26,23 +25,45 @@ export default function Collection() {
   const [username, setUsername] = useState("");
 
   useEffect(() => {
-    const user = getUser();
-    if (!user) {
-      navigate("/home");
-      return;
-    }
+    let isMounted = true;
 
-    setUsername(user.username);
-
-    const userItems = getUserCollection(user.username);
-    setItems(userItems);
-
-    loadLocationsData().then((data) => {
-      if (data) {
-        const totalLocations = getLocationCount(data);
-        setProgress(getCollectionProgress(user.username, totalLocations));
+    const loadCollection = async () => {
+      const user = getUser();
+      if (!user) {
+        navigate("/home");
+        return;
       }
-    });
+
+      if (isMounted) {
+        setUsername(user.username);
+      }
+
+      const userItems = await getUserCollection(user.username);
+      if (isMounted) {
+        setItems(userItems);
+      }
+
+      const data = await loadLocationsData();
+      if (data && isMounted) {
+        const totalLocations = getLocationCount(data);
+        const collected = userItems.length;
+        const percentage =
+          totalLocations > 0
+            ? Math.round((collected / totalLocations) * 100)
+            : 0;
+        setProgress({
+          collected,
+          total: totalLocations,
+          remaining: totalLocations - collected,
+          percentage,
+        });
+      }
+    };
+
+    void loadCollection();
+    return () => {
+      isMounted = false;
+    };
   }, [navigate]);
 
   const handleLogout = () => {

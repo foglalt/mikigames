@@ -28,44 +28,65 @@ export default function LocationPage() {
   const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
-    const user = getUser();
-    if (!user) {
-      navigate("/home");
-      return;
-    }
+    let isMounted = true;
 
-    if (!locationId) {
-      setError("No location specified");
-      setLoading(false);
-      return;
-    }
+    const loadLocation = async () => {
+      const user = getUser();
+      if (!user) {
+        navigate("/home");
+        return;
+      }
 
-    loadLocationsData().then((data) => {
+      if (!locationId) {
+        if (isMounted) {
+          setError("No location specified");
+          setLoading(false);
+        }
+        return;
+      }
+
+      const data = await loadLocationsData();
       if (!data) {
-        setError("Failed to load game data");
-        setLoading(false);
+        if (isMounted) {
+          setError("Failed to load game data");
+          setLoading(false);
+        }
         return;
       }
 
       const loc = data.locations[locationId];
       if (!loc) {
-        setError("Location not found");
-        setLoading(false);
+        if (isMounted) {
+          setError("Location not found");
+          setLoading(false);
+        }
         return;
       }
 
-      setLocation(loc);
+      if (isMounted) {
+        setLocation(loc);
+      }
 
       // Check if already collected
-      const existing = hasUserCollectedLocation(user.username, locationId);
-      if (existing) {
+      const existing = await hasUserCollectedLocation(
+        user.username,
+        locationId
+      );
+      if (existing && isMounted) {
         setAlreadyCollected(true);
         setCurrentDisplay(loc.collectible);
         setRevealed(true);
       }
 
-      setLoading(false);
-    });
+      if (isMounted) {
+        setLoading(false);
+      }
+    };
+
+    void loadLocation();
+    return () => {
+      isMounted = false;
+    };
   }, [locationId, navigate]);
 
   const handleCollect = async () => {
@@ -87,7 +108,7 @@ export default function LocationPage() {
         setIsRevealing(false);
 
         // Save to collection
-        recordCollection({
+        void recordCollection({
           username: user.username,
           locationId: locationId,
           locationName: location.name,
@@ -95,6 +116,10 @@ export default function LocationPage() {
           collectibleTitle: location.collectible.title,
           collectibleContent: location.collectible.content,
           collectibleAuthor: location.collectible.author,
+        }).then((saved) => {
+          if (!saved) {
+            setAlreadyCollected(true);
+          }
         });
         return;
       }

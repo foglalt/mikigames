@@ -31,15 +31,21 @@ export default function Admin() {
   const [users, setUsers] = useState<UserSummary[]>([]);
   const [data, setData] = useState<LocationsData | null>(null);
 
-  const loadData = () => {
-    setStats(getStatistics());
-    setUsers(getCollectionsByUser());
-    loadLocationsData().then(setData);
+  const loadData = async () => {
+    const [statsData, usersData, locationsData] = await Promise.all([
+      getStatistics(),
+      getCollectionsByUser(),
+      loadLocationsData(),
+    ]);
+
+    setStats(statsData);
+    setUsers(usersData);
+    setData(locationsData);
   };
 
   useEffect(() => {
     if (authenticated) {
-      loadData();
+      void loadData();
     }
   }, [authenticated]);
 
@@ -61,14 +67,14 @@ export default function Admin() {
     setPassword("");
   };
 
-  const handleClearData = () => {
+  const handleClearData = async () => {
     if (
       window.confirm(
         "Are you sure you want to clear ALL collection data? This cannot be undone!"
       )
     ) {
-      clearAllCollections();
-      loadData();
+      await clearAllCollections();
+      await loadData();
     }
   };
 

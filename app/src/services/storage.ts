@@ -1,5 +1,16 @@
 // Storage service for managing collections and user data
 
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  limit,
+  query,
+  setDoc,
+  where,
+  writeBatch,
+} from "firebase/firestore";
 import type {
   CollectionItem,
   User,
@@ -7,10 +18,40 @@ import type {
   UserSummary,
   CollectionProgress,
 } from "../types";
+import { db } from "./firebase";
 
-const COLLECTION_KEY = "qr_collection_items";
 const USER_KEY = "qr_quiz_user";
 const SESSION_KEY = "qr_admin_session";
+const COLLECTIONS_COLLECTION = "collections";
+
+function makeCollectionId(username: string, locationId: string): string {
+  return `${encodeURIComponent(username)}__${locationId}`;
+}
+
+function normalizeCollectionItem(
+  id: string,
+  data: Omit<CollectionItem, "id"> & { timestamp?: unknown }
+): CollectionItem {
+  const rawTimestamp = data.timestamp;
+  const timestamp =
+    typeof rawTimestamp === "string"
+      ? rawTimestamp
+      : typeof (rawTimestamp as { toDate?: () => Date })?.toDate === "function"
+      ? (rawTimestamp as { toDate: () => Date }).toDate().toISOString()
+      : new Date(0).toISOString();
+
+  return {
+    id,
+    username: data.username,
+    locationId: data.locationId,
+    locationName: data.locationName,
+    collectibleId: data.collectibleId,
+    collectibleTitle: data.collectibleTitle,
+    collectibleContent: data.collectibleContent,
+    collectibleAuthor: data.collectibleAuthor,
+    timestamp,
+  };
+}
 
 // User functions
 export function getUser(): User | null {
@@ -31,72 +72,116 @@ export function clearUser(): void {
 }
 
 // Collection functions
-export function getCollections(): CollectionItem[] {
+export async function getCollections(): Promise<CollectionItem[]> {
   try {
-    const data = localStorage.getItem(COLLECTION_KEY);
-    return data ? JSON.parse(data) : [];
-  } catch {
+    const snapshot = await getDocs(collection(db, COLLECTIONS_COLLECTION));
+    return snapshot.docs.map((docSnap) =>
+      normalizeCollectionItem(docSnap.id, docSnap.data() as CollectionItem)
+    );
+  } catch (error) {
+    console.error("Failed to load collections:", error);
     return [];
   }
 }
 
-export function getUserCollection(username: string): CollectionItem[] {
-  return getCollections().filter((c) => c.username === username);
+export async function getUserCollection(
+  username: string
+): Promise<CollectionItem[]> {
+  try {
+    const q = query(
+      collection(db, COLLECTIONS_COLLECTION),
+      where("username", "==", username)
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((docSnap) =>
+      normalizeCollectionItem(docSnap.id, docSnap.data() as CollectionItem)
+    );
+  } catch (error) {
+    console.error("Failed to load user collection:", error);
+    return [];
+  }
 }
 
-export function hasUserCollectedLocation(
+export async function hasUserCollectedLocation(
   username: string,
   locationId: string
-): CollectionItem | undefined {
-  return getCollections().find(
-    (c) => c.username === username && c.locationId === locationId
-  );
+): Promise<CollectionItem | undefined> {
+  try {
+    const q = query(
+      collection(db, COLLECTIONS_COLLECTION),
+      where("username", "==", username),
+      where("locationId", "==", locationId),
+      limit(1)
+    );
+    const snapshot = await getDocs(q);
+    const docSnap = snapshot.docs[0];
+    if (!docSnap) return undefined;
+    return normalizeCollectionItem(
+      docSnap.id,
+      docSnap.data() as CollectionItem
+    );
+  } catch (error) {
+    console.error("Failed to check collection status:", error);
+    return undefined;
+  }
 }
 
-export function recordCollection(
+export async function recordCollection(
   item: Omit<CollectionItem, "id" | "timestamp">
-): boolean {
-  const collections = getCollections();
+): Promise<boolean> {
+  try {
+    const docId = makeCollectionId(item.username, item.locationId);
+    const docRef = doc(db, COLLECTIONS_COLLECTION, docId);
+    const existing = await getDoc(docRef);
+    if (existing.exists()) {
+      return false;
+    }
 
-  // Check if already collected
-  const existing = collections.find(
-    (c) => c.username === item.username && c.locationId === item.locationId
-  );
+    await setDoc(docRef, {
+      ...item,
+      id: docId,
+      timestamp: new Date().toISOString(),
+    });
 
-  if (existing) {
+    return true;
+  } catch (error) {
+    console.error("Failed to record collection:", error);
     return false;
   }
-
-  collections.push({
-    ...item,
-    id: generateId(),
-    timestamp: new Date().toISOString(),
-  });
-
-  localStorage.setItem(COLLECTION_KEY, JSON.stringify(collections));
-  return true;
 }
 
-export function getCollectionProgress(
+export async function getCollectionProgress(
   username: string,
   totalLocations: number
-): CollectionProgress {
-  const userCollection = getUserCollection(username);
+): Promise<CollectionProgress> {
+  const userCollection = await getUserCollection(username);
   return {
     collected: userCollection.length,
     total: totalLocations,
     remaining: totalLocations - userCollection.length,
-    percentage: Math.round((userCollection.length / totalLocations) * 100),
+    percentage:
+      totalLocations > 0
+        ? Math.round((userCollection.length / totalLocations) * 100)
+        : 0,
   };
 }
 
-export function clearAllCollections(): void {
-  localStorage.removeItem(COLLECTION_KEY);
+export async function clearAllCollections(): Promise<void> {
+  try {
+    const snapshot = await getDocs(collection(db, COLLECTIONS_COLLECTION));
+    const batch = writeBatch(db);
+    snapshot.docs.forEach((docSnap) => {
+      batch.delete(docSnap.ref);
+    });
+    await batch.commit();
+  } catch (error) {
+    console.error("Failed to clear collections:", error);
+  }
 }
 
 // Statistics functions
-export function getStatistics(): Statistics {
-  const collections = getCollections();
+export async function getStatistics(): Promise<Statistics> {
+  const collections = await getCollections();
   const uniqueUsers = new Set(collections.map((c) => c.username));
 
   return {
@@ -105,8 +190,8 @@ export function getStatistics(): Statistics {
   };
 }
 
-export function getCollectionsByUser(): UserSummary[] {
-  const collections = getCollections();
+export async function getCollectionsByUser(): Promise<UserSummary[]> {
+  const collections = await getCollections();
   const userMap: Record<string, UserSummary> = {};
 
   collections.forEach((item) => {
@@ -138,6 +223,4 @@ export function setAuthenticated(value: boolean): void {
 }
 
 // Utility
-function generateId(): string {
-  return Date.now().toString(36) + Math.random().toString(36).substr(2);
-}
+// Firestore document ids handle uniqueness.

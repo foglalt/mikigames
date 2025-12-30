@@ -12,6 +12,7 @@
   "dependencies": {
     "@types/react-router-dom": "^5.3.3",
     "bootstrap": "^5.3.8",
+    "firebase": "^10.14.1",
     "qrcode.react": "^4.2.0",
     "react": "^19.2.0",
     "react-bootstrap": "^2.10.10",
