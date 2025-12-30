@@ -5,7 +5,8 @@ import { adminCookieName, isAdminTokenValid } from "@/lib/admin";
 export const runtime = "nodejs";
 
 export async function GET() {
-  const token = cookies().get(adminCookieName())?.value;
+  const cookieStore = await cookies();
+  const token = cookieStore.get(adminCookieName())?.value;
   const authenticated = isAdminTokenValid(token);
   return NextResponse.json({ authenticated });
 }

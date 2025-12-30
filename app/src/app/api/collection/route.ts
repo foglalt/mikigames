@@ -33,7 +33,7 @@ export async function GET(request: Request) {
   }
 
   const sql = getSql();
-  const rows = await sql<CollectionRow[]>`
+  const rows = (await sql`
     SELECT
       c.id,
       u.username,
@@ -48,7 +48,7 @@ export async function GET(request: Request) {
     JOIN users u ON c.user_id = u.id
     WHERE u.username = ${username}
     ORDER BY c.collected_at ASC
-  `;
+  `) as CollectionRow[];
 
   const items = rows.map((row) => ({
     id: String(row.id),
@@ -93,13 +93,13 @@ export async function POST(request: Request) {
       : "";
 
   const sql = getSql();
-  const users = await sql<{ id: number }[]>`
+  const users = (await sql`
     INSERT INTO users (username)
     VALUES (${username})
     ON CONFLICT (username)
     DO UPDATE SET username = EXCLUDED.username
     RETURNING id
-  `;
+  `) as { id: number }[];
   const userId = users[0]?.id;
   if (!userId) {
     return NextResponse.json(
@@ -108,7 +108,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const inserted = await sql<CollectionRow[]>`
+  const inserted = (await sql`
     INSERT INTO collections (
       user_id,
       location_id,
@@ -139,7 +139,7 @@ export async function POST(request: Request) {
       collectible_content,
       collectible_author,
       collected_at
-  `;
+  `) as CollectionRow[];
 
   if (inserted.length === 0) {
     return NextResponse.json({ created: false });

@@ -31,13 +31,13 @@ export async function POST(request: Request) {
   }
 
   const sql = getSql();
-  const rows = await sql<UserRow[]>`
+  const rows = (await sql`
     INSERT INTO users (username)
     VALUES (${username})
     ON CONFLICT (username)
     DO UPDATE SET username = EXCLUDED.username
     RETURNING username, registered_at
-  `;
+  `) as UserRow[];
 
   const row = rows[0];
   return NextResponse.json({

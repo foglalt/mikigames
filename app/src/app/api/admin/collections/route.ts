@@ -24,13 +24,14 @@ function toIso(value: string | Date): string {
 }
 
 export async function GET() {
-  const token = cookies().get(adminCookieName())?.value;
+  const cookieStore = await cookies();
+  const token = cookieStore.get(adminCookieName())?.value;
   if (!isAdminTokenValid(token)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const sql = getSql();
-  const rows = await sql<CollectionRow[]>`
+  const rows = (await sql`
     SELECT
       c.id,
       u.username,
@@ -44,7 +45,7 @@ export async function GET() {
     FROM collections c
     JOIN users u ON c.user_id = u.id
     ORDER BY u.username ASC, c.collected_at ASC
-  `;
+  `) as CollectionRow[];
 
   const userMap = new Map<
     string,
@@ -97,7 +98,8 @@ export async function GET() {
 }
 
 export async function DELETE() {
-  const token = cookies().get(adminCookieName())?.value;
+  const cookieStore = await cookies();
+  const token = cookieStore.get(adminCookieName())?.value;
   if (!isAdminTokenValid(token)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

@@ -16,14 +16,14 @@ export async function GET(request: Request) {
   }
 
   const sql = getSql();
-  const rows = await sql`
+  const rows = (await sql`
     SELECT 1
     FROM collections c
     JOIN users u ON c.user_id = u.id
     WHERE u.username = ${username}
       AND c.location_id = ${locationId}
     LIMIT 1
-  `;
+  `) as Record<string, unknown>[];
 
   return NextResponse.json({ exists: rows.length > 0 });
 }
