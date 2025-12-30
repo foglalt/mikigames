@@ -5,25 +5,30 @@ import useSWR from "swr";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Container, Card, Button, Alert, Spinner } from "react-bootstrap";
+import { useLanguage } from "@/i18n/LanguageProvider";
 import {
   getUser,
   hasUserCollectedLocation,
   recordCollection,
 } from "@/services/storage";
-import { loadLocationsData } from "@/services/data";
-import { PLACEHOLDER_QUOTES } from "@/config";
+import { loadLocalizedLocationsData } from "@/services/data";
+import { getPlaceholderQuotes } from "@/config";
 import type { Location, Collectible } from "@/types";
 
 export default function LocationClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const locationId = searchParams.get("id");
+  const { language, t } = useLanguage();
 
   const { data: user } = useSWR("user", getUser, {
     revalidateOnFocus: false,
   });
   const username = user?.username;
-  const { data: locationsData } = useSWR("locations", loadLocationsData);
+  const { data: locationsData } = useSWR(
+    ["locations", language],
+    () => loadLocalizedLocationsData(language)
+  );
   const location = useMemo<Location | null>(() => {
     if (!locationId || !locationsData) {
       return null;
@@ -56,11 +61,11 @@ export default function LocationClient() {
   const isRevealed = revealed || alreadyCollected;
 
   const pageError = !locationId
-    ? "No location specified"
+    ? t("locationNoId")
     : locationsData === null
-      ? "Failed to load game data"
+      ? t("locationDataFail")
       : locationsData && !location
-        ? "Location not found"
+        ? t("locationNotFound")
         : "";
   const isLoading =
     !pageError &&
@@ -100,9 +105,10 @@ export default function LocationClient() {
         return;
       }
 
+      const placeholderQuotes = getPlaceholderQuotes(language);
       const randomQuote =
-        PLACEHOLDER_QUOTES[
-          Math.floor(Math.random() * PLACEHOLDER_QUOTES.length)
+        placeholderQuotes[
+          Math.floor(Math.random() * placeholderQuotes.length)
         ];
       setCurrentDisplay({
         id: "placeholder",
@@ -124,7 +130,7 @@ export default function LocationClient() {
     return (
       <Container className="py-5 text-center">
         <Spinner animation="border" role="status">
-          <span className="visually-hidden">Loading...</span>
+          <span className="visually-hidden">{t("loading")}</span>
         </Spinner>
       </Container>
     );
@@ -134,10 +140,10 @@ export default function LocationClient() {
     return (
       <Container className="py-5">
         <Alert variant="danger" className="text-center">
-          <Alert.Heading>Oops!</Alert.Heading>
+          <Alert.Heading>{t("locationOops")}</Alert.Heading>
           <p>{pageError}</p>
           <Link href="/collection" className="btn btn-primary">
-            Go to Collection
+            {t("locationGoCollection")}
           </Link>
         </Alert>
       </Container>
@@ -147,7 +153,6 @@ export default function LocationClient() {
   return (
     <Container className="py-5">
       <div className="text-center mb-4">
-        <span className="location-icon display-1">{location?.icon}</span>
         <h1 className="h2 mt-3">{location?.name}</h1>
       </div>
 
@@ -157,13 +162,10 @@ export default function LocationClient() {
             <div className="mystery-box mb-4">
               <span className="display-1">?</span>
             </div>
-            <h3 className="h4 mb-3">A Quote Awaits!</h3>
-            <p className="text-muted mb-4">
-              You&apos;ve discovered a new location. Tap below to reveal your
-              collectible!
-            </p>
+            <h3 className="h4 mb-3">{t("locationAwait")}</h3>
+            <p className="text-muted mb-4">{t("locationRevealHint")}</p>
             <Button variant="success" size="lg" onClick={handleCollect}>
-              Reveal Quote
+              {t("locationRevealButton")}
             </Button>
           </Card.Body>
         </Card>
@@ -179,13 +181,15 @@ export default function LocationClient() {
           <Card.Body className="p-4">
             {isRevealed && !alreadyCollected && (
               <div className="text-center mb-3">
-                <span className="badge bg-success">New Quote Collected</span>
+                <span className="badge bg-success">
+                  {t("locationNewBadge")}
+                </span>
               </div>
             )}
             {alreadyCollected && (
               <div className="text-center mb-3">
                 <span className="badge bg-info">
-                  Already in your collection
+                  {t("locationExistingBadge")}
                 </span>
               </div>
             )}
@@ -203,7 +207,7 @@ export default function LocationClient() {
 
       <div className="text-center mt-4">
         <Link href="/collection" className="btn btn-outline-primary">
-          View My Collection
+          {t("locationViewCollection")}
         </Link>
       </div>
     </Container>

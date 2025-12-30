@@ -1,38 +1,77 @@
 {
-  "gameTitle": "Quote Collector",
-  "gameDescription": "Visit all locations to collect inspiring quotes!",
+  "gameTitle": {
+    "en": "Quote Collector",
+    "hu": "Idézetgyűjtő"
+  },
+  "gameDescription": {
+    "en": "Visit all locations to collect inspiring quotes!",
+    "hu": "Járd be az összes helyszínt, és gyűjtsd össze az inspiráló idézeteket!"
+  },
   "locations": {
     "a7b3d8e2-4f1c-9a6b-3e5d-8c2f1a9b7e4d": {
-      "name": "Park Entrance",
-      "icon": "🌳",
+      "name": {
+        "en": "Park Entrance",
+        "hu": "Park bejárat"
+      },
       "collectible": {
         "id": "quote1",
         "type": "quote",
-        "title": "The Journey Begins",
-        "content": "The journey of a thousand miles begins with a single step.",
-        "author": "Lao Tzu"
+        "title": {
+          "en": "The Journey Begins",
+          "hu": "Az út kezdete"
+        },
+        "content": {
+          "en": "The journey of a thousand miles begins with a single step.",
+          "hu": "Egy ezer mérföldes út is egyetlen lépéssel kezdődik."
+        },
+        "author": {
+          "en": "Lao Tzu",
+          "hu": "Lao Ce"
+        }
       }
     },
     "c9f2e1a8-7d3b-4c6e-a5f8-2b9d1e7c3a6f": {
-      "name": "Fountain",
-      "icon": "⛲",
+      "name": {
+        "en": "Fountain",
+        "hu": "Szökőkút"
+      },
       "collectible": {
         "id": "quote2",
         "type": "quote",
-        "title": "Stay Curious",
-        "content": "The important thing is not to stop questioning. Curiosity has its own reason for existing.",
-        "author": "Albert Einstein"
+        "title": {
+          "en": "Stay Curious",
+          "hu": "Maradj kíváncsi"
+        },
+        "content": {
+          "en": "The important thing is not to stop questioning. Curiosity has its own reason for existing.",
+          "hu": "A legfontosabb, hogy ne hagyd abba a kérdezést. A kíváncsiságnak megvan a maga oka a létezésre."
+        },
+        "author": {
+          "en": "Albert Einstein",
+          "hu": "Albert Einstein"
+        }
       }
     },
     "e5d4c3b2-1a9f-8e7d-6c5b-4a3f2e1d9c8b": {
-      "name": "Old Tree",
-      "icon": "🌲",
+      "name": {
+        "en": "Old Tree",
+        "hu": "Öreg fa"
+      },
       "collectible": {
         "id": "quote3",
         "type": "quote",
-        "title": "Embrace Change",
-        "content": "The only way to make sense out of change is to plunge into it, move with it, and join the dance.",
-        "author": "Alan Watts"
+        "title": {
+          "en": "Embrace Change",
+          "hu": "Fogadd el a változást"
+        },
+        "content": {
+          "en": "The only way to make sense out of change is to plunge into it, move with it, and join the dance.",
+          "hu": "A változás értelmét csak úgy találhatod meg, ha belemerülsz, együtt mozogsz vele, és részt veszel a táncban."
+        },
+        "author": {
+          "en": "Alan Watts",
+          "hu": "Alan Watts"
+        }
       }
     }
   }

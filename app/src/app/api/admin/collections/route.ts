@@ -7,15 +7,15 @@ import { ensureSchema } from "@/lib/schema";
 export const runtime = "nodejs";
 
 type CollectionRow = {
-  id: number;
+  id: number | null;
   username: string;
-  location_id: string;
-  location_name: string;
-  collectible_id: string;
-  collectible_title: string;
-  collectible_content: string;
-  collectible_author: string;
-  collected_at: string | Date;
+  location_id: string | null;
+  location_name: string | null;
+  collectible_id: string | null;
+  collectible_title: string | null;
+  collectible_content: string | null;
+  collectible_author: string | null;
+  collected_at: string | Date | null;
 };
 
 function toIso(value: string | Date): string {
@@ -35,8 +35,8 @@ export async function GET() {
   const sql = getSql();
   const rows = (await sql`
     SELECT
-      c.id,
       u.username,
+      c.id,
       c.location_id,
       c.location_name,
       c.collectible_id,
@@ -44,8 +44,8 @@ export async function GET() {
       c.collectible_content,
       c.collectible_author,
       c.collected_at
-    FROM collections c
-    JOIN users u ON c.user_id = u.id
+    FROM users u
+    LEFT JOIN collections c ON c.user_id = u.id
     ORDER BY u.username ASC, c.collected_at ASC
   `) as CollectionRow[];
 
@@ -69,34 +69,43 @@ export async function GET() {
   >();
 
   rows.forEach((row) => {
-    const item = {
-      id: String(row.id),
-      username: row.username,
-      locationId: row.location_id,
-      locationName: row.location_name,
-      collectibleId: row.collectible_id,
-      collectibleTitle: row.collectible_title,
-      collectibleContent: row.collectible_content,
-      collectibleAuthor: row.collectible_author,
-      timestamp: toIso(row.collected_at),
-    };
-
     if (!userMap.has(row.username)) {
       userMap.set(row.username, {
         username: row.username,
-        items: [item],
-        totalCount: 1,
+        items: [],
+        totalCount: 0,
       });
-    } else {
-      const entry = userMap.get(row.username);
-      if (entry) {
-        entry.items.push(item);
-        entry.totalCount += 1;
-      }
     }
+
+    if (!row.id) {
+      return;
+    }
+
+    const entry = userMap.get(row.username);
+    if (!entry) return;
+
+    entry.items.push({
+      id: String(row.id),
+      username: row.username,
+      locationId: row.location_id || "",
+      locationName: row.location_name || "",
+      collectibleId: row.collectible_id || "",
+      collectibleTitle: row.collectible_title || "",
+      collectibleContent: row.collectible_content || "",
+      collectibleAuthor: row.collectible_author || "",
+      timestamp: toIso(row.collected_at ?? new Date(0)),
+    });
+    entry.totalCount += 1;
   });
 
-  return NextResponse.json(Array.from(userMap.values()));
+  const result = Array.from(userMap.values()).sort((a, b) => {
+    if (b.totalCount !== a.totalCount) {
+      return b.totalCount - a.totalCount;
+    }
+    return a.username.localeCompare(b.username);
+  });
+
+  return NextResponse.json(result);
 }
 
 export async function DELETE() {

@@ -10,7 +10,6 @@ export interface Collectible {
 
 export interface Location {
   name: string;
-  icon: string;
   collectible: Collectible;
 }
 
@@ -18,6 +17,29 @@ export interface LocationsData {
   gameTitle: string;
   gameDescription: string;
   locations: Record<string, Location>;
+}
+
+export type Language = "en" | "hu";
+
+export type LocalizedText = Record<Language, string>;
+
+export interface LocalizedCollectible {
+  id: string;
+  type: string;
+  title: LocalizedText;
+  content: LocalizedText;
+  author: LocalizedText;
+}
+
+export interface LocalizedLocation {
+  name: LocalizedText;
+  collectible: LocalizedCollectible;
+}
+
+export interface LocalizedLocationsData {
+  gameTitle: LocalizedText;
+  gameDescription: LocalizedText;
+  locations: Record<string, LocalizedLocation>;
 }
 
 export interface CollectionItem {

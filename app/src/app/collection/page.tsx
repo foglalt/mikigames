@@ -14,16 +14,21 @@ import {
   Alert,
   Spinner,
 } from "react-bootstrap";
+import { useLanguage } from "@/i18n/LanguageProvider";
 import {
   getUser,
   getUserCollection,
   clearUser,
 } from "@/services/storage";
-import { loadLocationsData, getLocationCount } from "@/services/data";
+import {
+  loadLocalizedLocationsData,
+  getLocationCount,
+} from "@/services/data";
 import type { CollectionProgress as Progress } from "@/types";
 
 export default function CollectionPage() {
   const router = useRouter();
+  const { language, t } = useLanguage();
   const { data: user } = useSWR("user", getUser, {
     revalidateOnFocus: false,
   });
@@ -33,8 +38,8 @@ export default function CollectionPage() {
     () => getUserCollection(username!)
   );
   const { data: locationsData } = useSWR(
-    "locations",
-    loadLocationsData
+    ["locations", language],
+    () => loadLocalizedLocationsData(language)
   );
 
   useEffect(() => {
@@ -83,7 +88,7 @@ export default function CollectionPage() {
     return (
       <Container className="py-5 text-center">
         <Spinner animation="border" role="status">
-          <span className="visually-hidden">Loading...</span>
+          <span className="visually-hidden">{t("loading")}</span>
         </Spinner>
       </Container>
     );
@@ -94,16 +99,26 @@ export default function CollectionPage() {
   }
 
   const itemsList = items ?? [];
+  const remainingLabel =
+    progress && progress.remaining === 1
+      ? t("collectionRemainingOne", {
+          count: String(progress.remaining),
+        })
+      : t("collectionRemainingMany", {
+          count: String(progress?.remaining ?? 0),
+        });
 
   return (
     <Container className="py-5">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
-          <h1 className="h3 mb-0">My Collection</h1>
-          <small className="text-muted">Welcome, {username}!</small>
+          <h1 className="h3 mb-0">{t("collectionTitle")}</h1>
+          <small className="text-muted">
+            {t("collectionWelcome", { username })}
+          </small>
         </div>
         <Button variant="outline-secondary" size="sm" onClick={handleLogout}>
-          Logout
+          {t("logout")}
         </Button>
       </div>
 
@@ -111,7 +126,7 @@ export default function CollectionPage() {
         <Card className="mb-4">
           <Card.Body>
             <div className="d-flex justify-content-between align-items-center mb-2">
-              <span>Collection Progress</span>
+              <span>{t("collectionProgress")}</span>
               <Badge bg={getProgressVariant(progress.percentage)}>
                 {progress.collected} / {progress.total}
               </Badge>
@@ -124,13 +139,12 @@ export default function CollectionPage() {
             {progress.percentage === 100 ? (
               <div className="text-center mt-3">
                 <span className="text-success">
-                  Congratulations! You&apos;ve collected all quotes!
+                  {t("collectionCongrats")}
                 </span>
               </div>
             ) : (
               <small className="text-muted mt-2 d-block">
-                {progress.remaining} more quote
-                {progress.remaining !== 1 ? "s" : ""} to discover
+                {remainingLabel}
               </small>
             )}
           </Card.Body>
@@ -139,43 +153,48 @@ export default function CollectionPage() {
 
       {itemsList.length === 0 ? (
         <Alert variant="info" className="text-center">
-          <Alert.Heading>No quotes yet!</Alert.Heading>
-          <p>
-            Start scanning QR codes at different locations to build your
-            collection.
-          </p>
+          <Alert.Heading>{t("collectionEmptyTitle")}</Alert.Heading>
+          <p>{t("collectionEmptyBody")}</p>
         </Alert>
       ) : (
         <Row xs={1} md={2} className="g-4">
-          {itemsList.map((item) => (
-            <Col key={item.id}>
+          {itemsList.map((item) => {
+            const location = locationsData?.locations[item.locationId];
+            const collectible = location?.collectible;
+            const locationName = location?.name ?? item.locationName;
+            const title = collectible?.title ?? item.collectibleTitle;
+            const content = collectible?.content ?? item.collectibleContent;
+            const author = collectible?.author ?? item.collectibleAuthor;
+            return (
+              <Col key={item.id}>
               <Card className="h-100">
                 <Card.Header className="d-flex justify-content-between align-items-center">
-                  <span>{item.locationName}</span>
+                  <span>{locationName}</span>
                   <small className="text-muted">
                     {new Date(item.timestamp).toLocaleDateString()}
                   </small>
                 </Card.Header>
                 <Card.Body>
-                  <Card.Title>{item.collectibleTitle}</Card.Title>
+                  <Card.Title>{title}</Card.Title>
                   <blockquote className="blockquote mb-0">
                     <p className="fs-6 fst-italic">
-                      "{item.collectibleContent}"
+                      "{content}"
                     </p>
                     <footer className="blockquote-footer mt-2">
-                      {item.collectibleAuthor}
+                      {author}
                     </footer>
                   </blockquote>
                 </Card.Body>
               </Card>
             </Col>
-          ))}
+            );
+          })}
         </Row>
       )}
 
       <div className="text-center mt-4">
         <small className="text-muted">
-          Tip: Scan QR codes at different locations to discover new quotes!
+          {t("collectionTip")}
         </small>
       </div>
     </Container>
