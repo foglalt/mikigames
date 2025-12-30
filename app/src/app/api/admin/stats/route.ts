@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { adminCookieName, isAdminTokenValid } from "@/lib/admin";
 import { getSql } from "@/lib/db";
+import { ensureSchema } from "@/lib/schema";
 
 export const runtime = "nodejs";
 
@@ -12,6 +13,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  await ensureSchema();
   const sql = getSql();
   const usersResult = (await sql`
     SELECT COUNT(*)::int AS count FROM users

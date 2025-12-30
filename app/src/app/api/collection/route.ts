@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSql } from "@/lib/db";
+import { ensureSchema } from "@/lib/schema";
 
 export const runtime = "nodejs";
 
@@ -32,6 +33,7 @@ export async function GET(request: Request) {
     );
   }
 
+  await ensureSchema();
   const sql = getSql();
   const rows = (await sql`
     SELECT
@@ -92,6 +94,7 @@ export async function POST(request: Request) {
       ? body.collectibleAuthor
       : "";
 
+  await ensureSchema();
   const sql = getSql();
   const users = (await sql`
     INSERT INTO users (username)

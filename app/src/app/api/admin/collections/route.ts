@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { adminCookieName, isAdminTokenValid } from "@/lib/admin";
 import { getSql } from "@/lib/db";
+import { ensureSchema } from "@/lib/schema";
 
 export const runtime = "nodejs";
 
@@ -30,6 +31,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  await ensureSchema();
   const sql = getSql();
   const rows = (await sql`
     SELECT
@@ -104,6 +106,7 @@ export async function DELETE() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  await ensureSchema();
   const sql = getSql();
   await sql`DELETE FROM collections`;
 
