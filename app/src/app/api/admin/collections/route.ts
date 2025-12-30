@@ -109,6 +109,7 @@ export async function DELETE() {
   await ensureSchema();
   const sql = getSql();
   await sql`DELETE FROM collections`;
+  await sql`DELETE FROM users`;
 
   return NextResponse.json({ ok: true });
 }

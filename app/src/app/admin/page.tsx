@@ -78,7 +78,7 @@ export default function AdminPage() {
   const handleClearData = async () => {
     if (
       window.confirm(
-        "Are you sure you want to clear ALL collection data? This cannot be undone!"
+        "Are you sure you want to clear ALL user and collection data? This cannot be undone!"
       )
     ) {
       await clearAllCollections();
