@@ -4,36 +4,36 @@
     "hu": "Újévi elmélkedő séta"
   },
   "gameDescription": {
-    "en": "Visit each location to collect Scripture, Ellen G. White quotes, and reflection questions for a hopeful new year.",
-    "hu": "Járd végig a helyszíneket, és gyűjts Igéket, Ellen G. White idézeteket és elmélkedő kérdéseket az új év reménységéhez."
+    "en": "Visit each location to collect Scripture, Ellen G. White quotes, and inspiring questions to reflect on the past year and have strength for the next one",
+    "hu": "Járd végig a helyszíneket, és gyűjts Igéket, Ellen G. White idézeteket és inspiráló kérdéseket, hogy elmélkedj az előző éven és erőt meríts a következőhöz."
   },
   "locations": {
     "a14e0d24-8d53-4ff7-b4de-a34891d1bb02": {
       "name": {
-        "en": "Prayer Corner",
-        "hu": "Ima-sarok"
+        "en": "Wise Heart",
+        "hu": "Bölcs szív"
       },
       "collectible": {
         "id": "ny_verse_01",
         "type": "bibleVerse",
         "title": {
-          "en": "Number Your Days",
-          "hu": "Számláld meg a napjaid"
+          "en": "Wise Heart",
+          "hu": "Bölcs szív"
         },
         "content": {
-          "en": "So teach us to number our days, that we may apply our hearts unto wisdom. (Psalm 90:12, KJV)",
-          "hu": "„Taníts minket napjaink számlálására, hogy bölcs szívre jussunk.” (Zsolt 90:12 – szabad fordítás)"
+          "en": "So teach [us] to number our days, that we may apply [our] hearts unto wisdom.",
+          "hu": "Taníts minket úgy számlálni napjainkat, hogy bölcs szívhez jussunk."
         },
         "author": {
-          "en": "Bible (KJV)",
-          "hu": "Biblia"
+          "en": "Pss 90:12",
+          "hu": "Zsoltárok 90:12"
         }
       }
     },
     "99afefa9-4488-4655-8eb4-e6ce45b7cf02": {
       "name": {
-        "en": "Hope Overlook",
-        "hu": "Remény kilátó"
+        "en": "Stone of Gratitude",
+        "hu": "Hála emlékköve"
       },
       "collectible": {
         "id": "ny_verse_02",
@@ -43,12 +43,12 @@
           "hu": "Új teremtés"
         },
         "content": {
-          "en": "Therefore if any man be in Christ, he is a new creature: old things are passed away; behold, all things are become new. (2 Corinthians 5:17, KJV)",
-          "hu": "„Ha valaki Krisztusban van: új teremtés; a régiek elmúltak, íme, újjá lett minden.” (2Kor 5:17 – szabad fordítás)"
+          "en": "Then Samuel took a stone, and set [it] between Mizpeh and Shen, and called the name of it Eben–ezer, saying, Hitherto hath the Lord helped us.",
+          "hu": "Sámuel pedig vett egy követ, és felállítá Mispa és Sén között, és Ében-Háézernek nevezte el, mert mondá: Mindeddig megsegített minket az Úr!"
         },
         "author": {
-          "en": "Bible (KJV)",
-          "hu": "Biblia"
+          "en": "1 Samuel 7:12",
+          "hu": "1 Sámuel 7:12"
         }
       }
     },
@@ -120,8 +120,8 @@
     },
     "965438c3-17e3-4a92-8112-29fe234a450b": {
       "name": {
-        "en": "Garden Path",
-        "hu": "Kerti ösvény"
+        "en": "Perfect peace",
+        "hu": "Teljes béke"
       },
       "collectible": {
         "id": "ny_verse_06",
@@ -131,12 +131,12 @@
           "hu": "Békességet ad"
         },
         "content": {
-          "en": "Thou wilt keep him in perfect peace, whose mind is stayed on thee: because he trusteth in thee. (Isaiah 26:3, KJV)",
-          "hu": "„Teljes békében őrzöd azt, aki rád támaszkodik, mert benned bízik.” (Ézs 26:3 – szabad fordítás)"
+          "en": "Thou wilt keep him in perfect peace, whose mind is stayed on thee: because he trusteth in thee.",
+          "hu": "Kinek szíve Reád támaszkodik, megőrzöd azt teljes békében, mert Te benned bízik."
         },
         "author": {
-          "en": "Bible (KJV)",
-          "hu": "Biblia"
+          "en": "Isaiah 26:3",
+          "hu": "Ézsaiás 26:3"
         }
       }
     },
@@ -395,7 +395,7 @@
           "hu": "Imádkozz előre"
         },
         "content": {
-          "en": "Who will you intentionally pray for each week this year—and how will you follow that prayer with action?",
+          "en": "For whom will you pay attention to pray regularly this ",
           "hu": "Kiért fogsz szándékosan imádkozni hetente idén — és hogyan fogod a tetteiddel is követni ezt az imát?"
         },
         "author": {
