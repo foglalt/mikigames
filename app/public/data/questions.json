@@ -265,8 +265,8 @@
     },
     "32ca1b71-fe76-4e68-a2ea-6212ac12cf9d": {
       "name": {
-        "en": "Stone of Gratitude",
-        "hu": "Hála köve"
+        "en": "Springs of water",
+        "hu": "Vizek forrásai"
       },
       "collectible": {
         "id": "ny_q_04",
@@ -282,8 +282,8 @@
     },
     "32ca1b71-fe76-4e68-a2ea-6212ac000000": {
       "name": {
-        "en": "Stone of Gratitude",
-        "hu": "Hála köve"
+        "en": "Road in the wilderness",
+        "hu": "út a pusztában"
       },
       "collectible": {
         "id": "ny_q_04",
