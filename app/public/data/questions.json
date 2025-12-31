@@ -44,18 +44,18 @@
     },
     "72edea15-9961-4565-a1f9-6a3a0c91ef06": {
       "name": {
-        "en": "River of Letting Go",
-        "hu": "Elengedés folyója"
+        "en": "Renewing daily",
+        "hu": "Megújulás minden nap"
       },
       "collectible": {
         "id": "ny_verse_03",
         "content": {
-          "en": "They are new every morning: great is thy faithfulness. (Lamentations 3:23, KJV)",
-          "hu": "„Minden reggel megújul; nagy a hűséged.” (JSir 3:23 – szabad fordítás)"
+          "en": "[They are] new every morning: great [is] thy faithfulness.",
+          "hu": "Lam 3:23 Minden reggel meg-megújul; nagy a te hűséged!"
         },
         "author": {
-          "en": "Bible (KJV)",
-          "hu": "Biblia"
+          "en": "Lam 3:23",
+          "hu": "JSir 3:23"
         }
       }
     },
@@ -67,12 +67,12 @@
       "collectible": {
         "id": "ny_verse_04",
         "content": {
-          "en": "Behold, I make all things new. (Revelation 21:5, KJV)",
-          "hu": "„Íme, mindent újjá teszek.” (Jel 21:5 – szabad fordítás)"
+          "en": "And he that sat upon the throne said, Behold, I make all things new. And he said unto me, Write: for these words are true and faithful.",
+          "hu": "És monda az, aki a királyi széken ül vala: Íme mindent újjá teszek. És monda nekem: Írd meg, mert e beszédek hívek és igazak."
         },
         "author": {
-          "en": "Bible (KJV)",
-          "hu": "Biblia"
+          "en": "Rev 21:5",
+          "hu": "Jel 21:5"
         }
       }
     },
@@ -84,12 +84,12 @@
       "collectible": {
         "id": "ny_verse_05",
         "content": {
-          "en": "Commit thy way unto the LORD; trust also in him; and he shall bring it to pass. (Psalm 37:5, KJV)",
-          "hu": "„Bízd az ÚRra utadat, bízz benne, és Ő cselekszik.” (Zsolt 37:5 – szabad fordítás)"
+          "en": "Commit thy way unto the LORD; trust also in him; and he shall bring it to pass.",
+          "hu": "Pss 37:5 Hagyjad az Úrra a te utadat, és bízzál benne, majd ő teljesíti."
         },
         "author": {
-          "en": "Bible (KJV)",
-          "hu": "Biblia"
+          "en": "Psalm 37:5",
+          "hu": "Zsoltárok 37:5"
         }
       }
     },
@@ -118,148 +118,148 @@
       "collectible": {
         "id": "ny_egw_01",
         "content": {
-          "en": "“Consecrate yourself to God in the morning; make this your very first work.”",
-          "hu": "„Reggel szenteld magad Istennek; ez legyen az első dolgod.”"
+          "en": "Consecrate yourself to God in the morning; make this your very first work. Let your prayer be, “Take me, O Lord, as wholly Thine. I lay all my plans at Thy feet. Use me today in Thy service. Abide with me, and let all my work be wrought in Thee.",
+          "hu": "Minden reggel első dolgotok legyen magatokat Istennek felajánlani. Így imádkozzatok: Fogadj el Uram, a te tulajdonodnak! Összes terveimet lábaidhoz teszem. Használj fel ma is szolgálatodra! Maradj velem s engedd, hogy minden munkámat tebenned végezzem! "
         },
         "author": {
-          "en": "Ellen G. White (Steps to Christ)",
-          "hu": "Ellen G. White (Jézushoz vezető út)"
+          "en": "Ellen G. White (Steps to Christ) - 70.1",
+          "hu": "Ellen G. White (Jézushoz vezető út) - 70.1"
         }
       }
     },
     "872773cc-bb3b-4609-bed3-c1fe0e4f0e05": {
       "name": {
-        "en": "Crossroads",
-        "hu": "Válaszút"
+        "en": "A reason to fear?",
+        "hu": "Ok a félelemre?"
       },
       "collectible": {
         "id": "ny_egw_02",
         "content": {
-          "en": "“We have nothing to fear for the future, except as we shall forget the way the Lord has led us.”",
-          "hu": "„A jövőtől nincs mit félnünk, hacsak el nem felejtjük, hogyan vezetett eddig az Úr.”"
+          "en": "We have nothing to fear for the future, except as we shall forget the way the Lord has led us, and His teaching in our past history",
+          "hu": "Nincs mit félnünk a jövőtől, ha el nem feledjük, az Úr múltbeli vezetését és tanításait."
         },
         "author": {
-          "en": "Ellen G. White (Life Sketches)",
-          "hu": "Ellen G. White (Életvázlatok)"
+          "en": "Ellen White in Life Sketches, p. 196",
+          "hu": "Ellen White in Life Sketches, p. 196"
         }
       }
     },
     "9554baf1-483f-4845-accb-6725cdd0ed79": {
       "name": {
-        "en": "Peace Fountain",
-        "hu": "Békesség forrása"
+        "en": "New year, new beginning",
+        "hu": "Új év, új kezdet"
       },
       "collectible": {
         "id": "ny_egw_03",
         "content": {
-          "en": "“In the darkest days, when appearances seem most forbidding, have faith in God.”",
-          "hu": "„A legsötétebb napokban is, amikor minden reménytelennek tűnik, higgy Istenben.”"
+          "en": "Let us begin the year with an entire renunciation of self. Let us pray for clear discernment, ... that we may always and everywhere be witnesses for Christ.",
+          "hu": "Kezdjük az évet az önmagunk teljes megtagadásával. Imádkozzunk a tiszta látásért, ... hogy mindig és mindenütt Krisztus tanúi lehessünk."
         },
         "author": {
-          "en": "Ellen G. White (Help In Daily Living)",
-          "hu": "Ellen G. White (Mindennapi segítség)"
+          "en": "Ellen G. White { From the Heart 13.2 }",
+          "hu": "Ellen G. White { From the Heart 13.2 }"
         }
       }
     },
     "db61d582-06f6-43d2-b3fa-6c734a8d0cdc": {
       "name": {
-        "en": "Forgiveness Bridge",
-        "hu": "Megbocsátás hídja"
+        "en": "Advancements for Christ",
+        "hu": "Előrelépések Krisztusért"
       },
       "collectible": {
         "id": "ny_egw_04",
         "content": {
-          "en": "“Do not bring the disagreeable things of the past into your present life.”",
-          "hu": "„Ne hozd át a múlt kellemetlen dolgait a jelenedbe.”"
+          "en": "The old year, with its burden of record, is fast passing away. The new year, with all its possibilities, will soon be ushered in. What advancement have we made in the knowledge of Christ during the past year?",
+          "hu": "Az óév, terheivel együtt gyorsan elment. Az új év, minden lehetőségével együtt, hamarosan beköszönt. Milyen előrelépést tettünk Krisztus ismeretében az elmúlt év során?"
         },
         "author": {
-          "en": "Ellen G. White (The Upward Look)",
-          "hu": "Ellen G. White (Tekints fel)"
+          "en": "Ellen G. White - Signs of the Times, January 2, 1901.",
+          "hu": "Ellen G. White - Signs of the Times, January 2, 1901."
         }
       }
     },
     "bdaa7086-8e9e-4aa7-84b9-0a48e4eb9c68": {
       "name": {
-        "en": "Memory Lane",
-        "hu": "Emlékezés útja"
+        "en": "Reflection on the past",
+        "hu": "Elmélkedés a múltról"
       },
       "collectible": {
         "id": "ny_egw_05",
         "content": {
-          "en": "“The closer you come to Jesus, the more faulty you will appear in your own eyes.”",
-          "hu": "„Minél közelebb kerülsz Jézushoz, annál hibásabbnak látod magad.”"
+          "en": "Already has the new year been ushered in; yet before we greet its coming, we pause to ask, What has been the history of the year that with its burden of records has now passed into eternity? ... God forbid that at this important hour we should be so engrossed with other matters as to give no time to serious, candid, critical self-examination! Let things of minor consequence be put in the background, and let us now bring to the front the things which concern our eternal interests... ",
+          "hu": "Az új év már beköszöntött; de mielőtt üdvözölnénk eljövetelét, megállunk, hogy megkérdezzük: Mi volt az elmúlt év története, amely most terhével együtt örökkévalóságba merült? ... Isten őrizzen meg minket attól, hogy ezen a fontos órán annyira elmerüljünk más dolgokban, hogy ne maradjon időnk a komoly, őszinte, kritikus önvizsgálatra! A kisebb jelentőségű dolgokat helyezzük háttérbe, és hozzuk előtérbe azokat a dolgokat, amelyek öröklétünket érintik..."
         },
         "author": {
-          "en": "Ellen G. White (Steps to Christ)",
-          "hu": "Ellen G. White (Jézushoz vezető út)"
+          "en": "Ellen G. White { From the Heart 13.2 }",
+          "hu": "Ellen G. White { From the Heart 13.2 }"
         }
       }
     },
     "3c9b5385-a180-4628-bdb4-57610e60370d": {
       "name": {
-        "en": "New Creation Grove",
-        "hu": "Új teremtés ligete"
+        "en": "A call to minister",
+        "hu": "Szolgálatra hívás"
       },
       "collectible": {
         "id": "ny_egw_06",
         "content": {
-          "en": "“Christ is waiting with longing desire for the manifestation of Himself in His church.”",
-          "hu": "„Krisztus vágyakozva várja, hogy egyháza által megmutatkozzék.”"
+          "en": "Shall we not, at the beginning of this new year, give ourselves and all we have to God? Shall we not listen to His voice, which calls us to a renewed contest, to a more thorough consecration of ourselves and our intrusted capabilities to His service?",
+          "hu": "Nem adjuk-e oda magunkat és mindenünket Istennek az új év kezdetén? Nem hallgatunk-e az Ő hangjára, amely megújult küzdelemre, önmagunk és ránk bízott képességeink alaposabb odaszánására hív szolgálatára?"
         },
         "author": {
-          "en": "Ellen G. White (Christ’s Object Lessons)",
-          "hu": "Ellen G. White (Krisztus példázatai)"
+          "en": "Ellen G. White - Signs of the Times, January 2, 1901.",
+          "hu": "Ellen G. White - Signs of the Times, January 2, 1901."
         }
       }
     },
     "bd46854b-7414-4278-a574-70c436638829": {
       "name": {
-        "en": "Mercy Morning",
-        "hu": "Irgalom reggele"
+        "en": "Reminder of Mercy",
+        "hu": "Emlékeztető a kegyelemre"
       },
       "collectible": {
         "id": "ny_q_01",
         "content": {
-          "en": "Where did you most clearly see God’s faithfulness this year, and how can you remember it when the next trial comes?",
-          "hu": "Hol láttad idén a legvilágosabban Isten hűségét, és hogyan fogsz erre emlékezni a következő próbában?"
+          "en": "Where did you most clearly see God’s faithfulness this year? Will you remember it when the next challenge comes?",
+          "hu": "Hol láttad idén a legvilágosabban Isten hűségét? Emlékezni fogsz rá, amikor a következő kihívás jön?"
         },
         "author": {
-          "en": "Reflection",
-          "hu": "Elmélkedés"
+          "en": "",
+          "hu": ""
         }
       }
     },
     "bb230f80-6b09-476d-9bb0-c9aed4f6acc0": {
       "name": {
-        "en": "Service Trail",
-        "hu": "Szolgálat ösvénye"
+        "en": "Source of freedom",
+        "hu": "Felszabadultság forrása"
       },
       "collectible": {
         "id": "ny_q_02",
         "content": {
-          "en": "What burden, sin, or regret do you need to bring to Christ today—and what would trusting His forgiveness change tomorrow?",
-          "hu": "Milyen terhet, bűnt vagy bánatot kell ma Krisztus elé vinned — és mit változtatna a holnapodon, ha valóban hinnél a bocsánatában?"
+          "en": "What burden, sin, or regret do you bring to Christ today?",
+          "hu": "Milyen terhet, bűnt vagy bánatot viszel ma Krisztus elé?"
         },
         "author": {
-          "en": "Reflection",
-          "hu": "Elmélkedés"
+          "en": "",
+          "hu": ""
         }
       }
     },
     "1f565c36-80ca-4fc2-94e4-693f070296eb": {
       "name": {
-        "en": "Blessing Meadow",
-        "hu": "Áldás mező"
+        "en": "Minister in obedience",
+        "hu": "Engedelmes szolgálat"
       },
       "collectible": {
         "id": "ny_q_03",
         "content": {
           "en": "What is one concrete act of obedience or kindness God is inviting you into for the new year?",
-          "hu": "Mi az az egy konkrét engedelmességi vagy szeretet-cselekedet, amire Isten hív az új évben?"
+          "hu": "Milyen önzetlen tettekre hív az Úr a következő évben? Tudod engedelmesen követni a hívását?"
         },
         "author": {
-          "en": "Reflection",
-          "hu": "Elmélkedés"
+          "en": "",
+          "hu": ""
         }
       }
     },
@@ -271,19 +271,36 @@
       "collectible": {
         "id": "ny_q_04",
         "content": {
-          "en": "If the first 10 minutes of your day belonged to God, what would that look like—prayer, Scripture, gratitude, silence?",
-          "hu": "Ha a napod első 10 perce Istené lenne, hogy nézne ki: ima, ige, hála, csend?"
+          "en": "I will open rivers in desolate heights, And fountains in the midst of the valleys;I will make the wilderness a pool of water, And the dry land springs of water.",
+          "hu": "A kopár hegyeken folyókat fakasztok és a völgyek között forrásokat. A pusztát bővizű tóvá teszem és a kiaszott földet vizek forrásaivá."
         },
         "author": {
-          "en": "Reflection",
-          "hu": "Elmélkedés"
+          "en": "Isaiah 41:18",
+          "hu": "Ézsaiás 41:18"
+        }
+      }
+    },
+    "32ca1b71-fe76-4e68-a2ea-6212ac000000": {
+      "name": {
+        "en": "Stone of Gratitude",
+        "hu": "Hála köve"
+      },
+      "collectible": {
+        "id": "ny_q_04",
+        "content": {
+          "en": "Behold, I will do a new thing, Now it shall spring forth; Shall you not know it? I will even make a road in the wilderness and rivers in the desert.",
+          "hu": "Ímé, újat cselekszem; most készül, avagy nem tudjátok még? Igen, a pusztában utat szerzek, és a kietlenben folyóvizeket."
+        },
+        "author": {
+          "en": "Isaiah 43:19",
+          "hu": "Ézsaiás 43:19"
         }
       }
     },
     "0978dc19-81e2-44a3-8e1e-f9f24c4331ff": {
       "name": {
-        "en": "Threshold",
-        "hu": "Küszöb"
+        "en": "When anxiety comes",
+        "hu": "Amikor jön a szorongás"
       },
       "collectible": {
         "id": "ny_q_05",
@@ -292,25 +309,25 @@
           "hu": "Melyik bibliai ígéretet akarod „kézben tartani”, amikor a szorongás el akarja vinni a gondolataidat?"
         },
         "author": {
-          "en": "Reflection",
-          "hu": "Elmélkedés"
+          "en": "",
+          "hu": ""
         }
       }
     },
     "35ad6a4b-7b0f-4408-8ef8-054ab778aa1e": {
       "name": {
-        "en": "Quiet Bench",
-        "hu": "Csendes pad"
+        "en": "Promise of prayer",
+        "hu": "Imádság ígérete"
       },
       "collectible": {
         "id": "ny_q_06",
         "content": {
-          "en": "For whom will you pay attention to pray regularly this ",
-          "hu": "Kiért fogsz szándékosan imádkozni hetente idén — és hogyan fogod a tetteiddel is követni ezt az imát?"
+          "en": "For whom will you pray regularly this year? ",
+          "hu": "Kiért fogsz szándékosan rendszeresen imádkozni ebben az évben?"
         },
         "author": {
-          "en": "Reflection",
-          "hu": "Elmélkedés"
+          "en": "",
+          "hu": ""
         }
       }
     }
