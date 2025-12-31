@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { adminCookieName, isAdminTokenValid } from "@/lib/admin";
 import { getSql } from "@/lib/db";
 import { ensureSchema } from "@/lib/schema";
+import { START_LOCATION_ID } from "@/config";
 
 export const runtime = "nodejs";
 
@@ -44,6 +45,7 @@ export async function GET() {
       c.collected_at
     FROM users u
     LEFT JOIN collections c ON c.user_id = u.id
+      AND c.location_id <> ${START_LOCATION_ID}
     ORDER BY u.username ASC, c.collected_at ASC
   `) as CollectionRow[];
 

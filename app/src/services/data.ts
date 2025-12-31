@@ -1,5 +1,6 @@
 // Data loading service
 
+import { START_LOCATION_ID } from "../config";
 import type {
   Language,
   LocalizedLocationsData,
@@ -60,5 +61,6 @@ export async function loadLocalizedLocationsData(
 }
 
 export function getLocationCount(data: LocationsData): number {
-  return Object.keys(data.locations).length;
+  return Object.keys(data.locations).filter((id) => id !== START_LOCATION_ID)
+    .length;
 }

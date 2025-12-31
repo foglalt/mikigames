@@ -12,7 +12,7 @@ import {
   recordCollection,
 } from "@/services/storage";
 import { loadLocalizedLocationsData } from "@/services/data";
-import { getPlaceholderQuotes } from "@/config";
+import { getPlaceholderQuotes, START_LOCATION_ID } from "@/config";
 import type { Location, Collectible } from "@/types";
 
 export default function LocationClient() {
@@ -20,6 +20,8 @@ export default function LocationClient() {
   const router = useRouter();
   const locationId = searchParams.get("id");
   const { language, t } = useLanguage();
+  const isStartLocation = locationId === START_LOCATION_ID;
+  const requiresUser = !isStartLocation;
 
   const { data: user } = useSWR("user", getUser, {
     revalidateOnFocus: false,
@@ -36,7 +38,7 @@ export default function LocationClient() {
 
     return locationsData.locations[locationId] ?? null;
   }, [locationId, locationsData]);
-  const shouldCheckCollected = Boolean(username && locationId);
+  const shouldCheckCollected = Boolean(username && locationId && !isStartLocation);
   const { data: collected } = useSWR(
     shouldCheckCollected ? ["collection-exists", username, locationId] : null,
     () => hasUserCollectedLocation(username!, locationId ?? "")
@@ -49,10 +51,10 @@ export default function LocationClient() {
   const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
-    if (user === null) {
+    if (requiresUser && user === null) {
       router.push("/home");
     }
-  }, [router, user]);
+  }, [requiresUser, router, user]);
 
   const alreadyCollected = Boolean(collected) || localAlreadyCollected;
   const displayItem =
@@ -70,7 +72,7 @@ export default function LocationClient() {
   const isLoading =
     !pageError &&
     (user === undefined ||
-      user === null ||
+      (requiresUser && user === null) ||
       locationsData === undefined ||
       (shouldCheckCollected && collected === undefined));
 
@@ -143,6 +145,49 @@ export default function LocationClient() {
             {t("locationGoCollection")}
           </Link>
         </Alert>
+      </Container>
+    );
+  }
+
+  if (isStartLocation && location) {
+    const startHref = user ? "/collection" : "/home";
+    const startLabel = user ? t("locationViewCollection") : t("homeStart");
+    const introContent = location.collectible.content.trim();
+    const introAuthor = location.collectible.author.trim();
+
+    return (
+      <Container className="py-5">
+        <div className="text-center mb-4">
+          <h1 className="h2 mt-3">{location.name}</h1>
+          <p className="text-muted mb-0">{t("homeWelcome")}</p>
+        </div>
+
+        <Card className="mx-auto" style={{ maxWidth: "500px" }}>
+          <Card.Body className="p-4">
+            {introContent && (
+              <blockquote className="blockquote text-center mb-4">
+                <p className="mb-2">"{introContent}"</p>
+                {introAuthor && (
+                  <footer className="blockquote-footer">
+                    {introAuthor}
+                  </footer>
+                )}
+              </blockquote>
+            )}
+            <h3 className="h5 mb-3">{t("homeHowToPlay")}</h3>
+            <ol className="mb-4">
+              <li>{t("homeStep1")}</li>
+              <li>{t("homeStep2")}</li>
+              <li>{t("homeStep3")}</li>
+              <li>{t("homeStep4")}</li>
+            </ol>
+            <div className="d-grid">
+              <Link href={startHref} className="btn btn-primary">
+                {startLabel}
+              </Link>
+            </div>
+          </Card.Body>
+        </Card>
       </Container>
     );
   }

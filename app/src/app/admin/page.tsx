@@ -25,6 +25,7 @@ import {
   clearAllCollections,
 } from "@/services/storage";
 import { loadLocalizedLocationsData, getLocationCount } from "@/services/data";
+import { START_LOCATION_ID } from "@/config";
 import type { Statistics, UserSummary, LocationsData } from "@/types";
 
 export default function AdminPage() {
@@ -148,6 +149,12 @@ export default function AdminPage() {
   }
 
   const totalLocations = data ? getLocationCount(data) : 0;
+  const startLocation = data?.locations[START_LOCATION_ID];
+  const qrLocations = data
+    ? Object.entries(data.locations).filter(
+        ([locationId]) => locationId !== START_LOCATION_ID
+      )
+    : [];
   const userList = users ?? [];
 
   return (
@@ -297,36 +304,68 @@ export default function AdminPage() {
                   {t("qrDescription")}
                 </p>
                 {origin ? (
-                  <div className="qr-codes-grid">
-                    {Object.entries(data.locations).map(([id, loc]) => {
-                      const qrUrl = `${origin}/location?id=${id}`;
-                      return (
-                        <div className="qr-code-item" key={id}>
-                          <Card className="h-100 text-center qr-card">
-                            <Card.Body>
-                              <h5 className="mb-3">{loc.name}</h5>
-                              <div className="qr-code-container bg-white p-3 d-inline-block rounded">
-                                <QRCodeSVG
-                                  value={qrUrl}
-                                  size={150}
-                                  level="M"
-                                  includeMargin={true}
-                                />
-                              </div>
-                              <div className="mt-3">
-                                <small
-                                  className="text-muted d-block text-break"
-                                  style={{ fontSize: "0.65rem" }}
-                                >
-                                  {qrUrl}
-                                </small>
-                              </div>
-                            </Card.Body>
-                          </Card>
+                  <>
+                    {startLocation && (
+                      <div className="mb-4">
+                        <h5 className="mb-3">{t("qrStartTitle")}</h5>
+                        <div className="d-flex justify-content-center">
+                          <div className="qr-code-item" style={{ maxWidth: "320px", width: "100%" }}>
+                            <Card className="h-100 text-center qr-card">
+                              <Card.Body>
+                                <h5 className="mb-3">{startLocation.name}</h5>
+                                <div className="qr-code-container bg-white p-3 d-inline-block rounded">
+                                  <QRCodeSVG
+                                    value={`${origin}/location?id=${START_LOCATION_ID}`}
+                                    size={150}
+                                    level="M"
+                                    includeMargin={true}
+                                  />
+                                </div>
+                                <div className="mt-3">
+                                  <small
+                                    className="text-muted d-block text-break"
+                                    style={{ fontSize: "0.65rem" }}
+                                  >
+                                    {`${origin}/location?id=${START_LOCATION_ID}`}
+                                  </small>
+                                </div>
+                              </Card.Body>
+                            </Card>
+                          </div>
                         </div>
-                      );
-                    })}
-                  </div>
+                      </div>
+                    )}
+                    <div className="qr-codes-grid">
+                      {qrLocations.map(([id, loc]) => {
+                        const qrUrl = `${origin}/location?id=${id}`;
+                        return (
+                          <div className="qr-code-item" key={id}>
+                            <Card className="h-100 text-center qr-card">
+                              <Card.Body>
+                                <h5 className="mb-3">{loc.name}</h5>
+                                <div className="qr-code-container bg-white p-3 d-inline-block rounded">
+                                  <QRCodeSVG
+                                    value={qrUrl}
+                                    size={150}
+                                    level="M"
+                                    includeMargin={true}
+                                  />
+                                </div>
+                                <div className="mt-3">
+                                  <small
+                                    className="text-muted d-block text-break"
+                                    style={{ fontSize: "0.65rem" }}
+                                  >
+                                    {qrUrl}
+                                  </small>
+                                </div>
+                              </Card.Body>
+                            </Card>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </>
                 ) : (
                   <Alert variant="info" className="mb-0">
                     {t("qrLoading")}

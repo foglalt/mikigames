@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSql } from "@/lib/db";
 import { ensureSchema } from "@/lib/schema";
+import { START_LOCATION_ID } from "@/config";
 
 export const runtime = "nodejs";
 
@@ -47,6 +48,7 @@ export async function GET(request: Request) {
     FROM collections c
     JOIN users u ON c.user_id = u.id
     WHERE u.username = ${username}
+      AND c.location_id <> ${START_LOCATION_ID}
     ORDER BY c.collected_at ASC
   `) as CollectionRow[];
 
@@ -74,6 +76,9 @@ export async function POST(request: Request) {
       { error: "Username and locationId are required" },
       { status: 400 }
     );
+  }
+  if (locationId === START_LOCATION_ID) {
+    return NextResponse.json({ created: false });
   }
 
   const locationName =

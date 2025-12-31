@@ -1,5 +1,7 @@
 import type { Language } from "./types";
 
+export const START_LOCATION_ID = "00000000-0000-0000-0000-000000000000";
+
 const PLACEHOLDER_QUOTES = {
   en: [
     {

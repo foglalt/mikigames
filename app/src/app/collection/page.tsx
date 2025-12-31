@@ -24,6 +24,7 @@ import {
   loadLocalizedLocationsData,
   getLocationCount,
 } from "@/services/data";
+import { START_LOCATION_ID } from "@/config";
 import type { CollectionProgress as Progress } from "@/types";
 
 export default function CollectionPage() {
@@ -65,7 +66,9 @@ export default function CollectionPage() {
     }
 
     const totalLocations = getLocationCount(locationsData);
-    const collected = items ? items.length : 0;
+    const collected = items
+      ? items.filter((item) => item.locationId !== START_LOCATION_ID).length
+      : 0;
     const percentage =
       totalLocations > 0
         ? Math.round((collected / totalLocations) * 100)
@@ -98,7 +101,9 @@ export default function CollectionPage() {
     return null;
   }
 
-  const itemsList = items ?? [];
+  const itemsList = (items ?? []).filter(
+    (item) => item.locationId !== START_LOCATION_ID
+  );
   const remainingLabel =
     progress && progress.remaining === 1
       ? t("collectionRemainingOne", {

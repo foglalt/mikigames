@@ -8,6 +8,23 @@
     "hu": "Járd végig a helyszíneket, és gyűjts Igéket, Ellen G. White idézeteket és inspiráló kérdéseket, hogy elmélkedj az előző éven és erőt meríts a következőhöz."
   },
   "locations": {
+    "00000000-0000-0000-0000-000000000000": {
+      "name": {
+        "en": "Small beginning",
+        "hu": "Kicsiny kezdet"
+      },
+      "collectible": {
+        "id": "ny_verse_01",
+        "content": {
+          "en": "Be not disheartened at small beginnings. It is often the humblest work that yields the greatest results. The more direct our labor for our fellow-men, the greater good will be accomplished. Personal influence is a power.",
+          "hu": "Ne csüggedjetek el a kicsiny kezdet miatt; gyakran a legszerényebb munka hozza meg a legnagyobb eredményeket. Minél közvetlenebbül munkálkodunk felebarátainkért, annál több jót érünk el náluk. A személyes befolyás hatalom."
+        },
+        "author": {
+          "en": "EGW {GW 192.1}",
+          "hu": "EGW {GW 192.1}"
+        }
+      }
+    },
     "a14e0d24-8d53-4ff7-b4de-a34891d1bb02": {
       "name": {
         "en": "Wise Heart",
