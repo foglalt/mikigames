@@ -32,13 +32,20 @@ export default function AdminPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const { language, t } = useLanguage();
-  const [showQrCodes, setShowQrCodes] = useState(() => {
+  const [showStationQrCodes, setShowStationQrCodes] = useState(() => {
     if (typeof window === "undefined") {
       return true;
     }
-    const stored = window.localStorage.getItem("admin_show_qr_codes");
-    return stored ? stored === "true" : true;
+    const stored = window.localStorage.getItem("admin_show_station_qr_codes");
+    if (stored !== null) {
+      return stored === "true";
+    }
+    const legacy = window.localStorage.getItem("admin_show_qr_codes");
+    return legacy ? legacy === "true" : true;
   });
+  const [qrUnlocked, setQrUnlocked] = useState(false);
+  const [qrPassword, setQrPassword] = useState("");
+  const [qrPasswordError, setQrPasswordError] = useState("");
   const { data: session, mutate: mutateSession } = useSWR<{
     authenticated: boolean;
   }>(
@@ -66,11 +73,11 @@ export default function AdminPage() {
     { revalidateOnFocus: false }
   );
   const origin = runtimeOrigin ?? "";
-  const toggleQrCodes = () => {
-    setShowQrCodes((current) => {
+  const toggleStationQrCodes = () => {
+    setShowStationQrCodes((current) => {
       const next = !current;
       if (typeof window !== "undefined") {
-        window.localStorage.setItem("admin_show_qr_codes", String(next));
+        window.localStorage.setItem("admin_show_station_qr_codes", String(next));
       }
       return next;
     });
@@ -82,6 +89,9 @@ export default function AdminPage() {
     const result = await adminLogin(password);
     if (result) {
       setError("");
+      setQrUnlocked(false);
+      setQrPassword("");
+      setQrPasswordError("");
       await mutateSession();
     } else {
       setError(t("invalidPassword"));
@@ -92,6 +102,27 @@ export default function AdminPage() {
     await adminLogout();
     await mutateSession({ authenticated: false }, { revalidate: false });
     setPassword("");
+    setQrUnlocked(false);
+    setQrPassword("");
+    setQrPasswordError("");
+  };
+
+  const handleQrUnlock = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const result = await adminLogin(qrPassword);
+    if (result) {
+      setQrUnlocked(true);
+      setQrPassword("");
+      setQrPasswordError("");
+    } else {
+      setQrPasswordError(t("invalidPassword"));
+    }
+  };
+
+  const handleQrLock = () => {
+    setQrUnlocked(false);
+    setQrPassword("");
+    setQrPasswordError("");
   };
 
   const handleClearData = async () => {
@@ -271,70 +302,125 @@ export default function AdminPage() {
       </Card>
 
       {data && (
-        <Card className="qr-print-section">
-          <Card.Header className="d-flex justify-content-between align-items-center">
-            <span>{t("qrCodesTitle")}</span>
-            <div className="d-flex gap-2">
-              <Button
-                variant="outline-secondary"
-                size="sm"
-                onClick={toggleQrCodes}
-              >
-                {showQrCodes ? t("qrHide") : t("qrShow")}
-              </Button>
-              {showQrCodes && (
-                <Button
-                  variant="outline-primary"
-                  size="sm"
-                  onClick={() => window.print()}
-                >
-                  {t("qrPrintButton")}
-                </Button>
-              )}
-            </div>
-          </Card.Header>
-          <Card.Body>
-            {!showQrCodes ? (
-              <Alert variant="info" className="mb-0">
-                {t("qrHidden")}
-              </Alert>
-            ) : (
-              <>
-                <p className="text-muted mb-4 qr-description">
-                  {t("qrDescription")}
-                </p>
+        <div className="qr-print-section">
+          {startLocation && (
+            <Card className="mb-4 qr-start-section">
+              <Card.Header className="d-flex justify-content-between align-items-center">
+                <span>{t("qrStartTitle")}</span>
+              </Card.Header>
+              <Card.Body>
                 {origin ? (
-                  <>
-                    {startLocation && (
-                      <div className="mb-4">
-                        <h5 className="mb-3">{t("qrStartTitle")}</h5>
-                        <div className="d-flex justify-content-center">
-                          <div className="qr-code-item" style={{ maxWidth: "320px", width: "100%" }}>
-                            <Card className="h-100 text-center qr-card">
-                              <Card.Body>
-                                <h5 className="mb-3">{startLocation.name}</h5>
-                                <div className="qr-code-container bg-white p-3 d-inline-block rounded">
-                                  <QRCodeSVG
-                                    value={`${origin}/location?id=${START_LOCATION_ID}`}
-                                    size={150}
-                                    level="M"
-                                    includeMargin={true}
-                                  />
-                                </div>
-                                <div className="mt-3">
-                                  <small
-                                    className="text-muted d-block text-break"
-                                    style={{ fontSize: "0.65rem" }}
-                                  >
-                                    {`${origin}/location?id=${START_LOCATION_ID}`}
-                                  </small>
-                                </div>
-                              </Card.Body>
-                            </Card>
+                  <div className="d-flex justify-content-center">
+                    <div
+                      className="qr-code-item"
+                      style={{ maxWidth: "320px", width: "100%" }}
+                    >
+                      <Card className="h-100 text-center qr-card">
+                        <Card.Body>
+                          <h5 className="mb-3">{startLocation.name}</h5>
+                          <div className="qr-code-container bg-white p-3 d-inline-block rounded">
+                            <QRCodeSVG
+                              value={`${origin}/location?id=${START_LOCATION_ID}`}
+                              size={150}
+                              level="M"
+                              includeMargin={true}
+                            />
                           </div>
-                        </div>
-                      </div>
+                          <div className="mt-3">
+                            <small
+                              className="text-muted d-block text-break"
+                              style={{ fontSize: "0.65rem" }}
+                            >
+                              {`${origin}/location?id=${START_LOCATION_ID}`}
+                            </small>
+                          </div>
+                        </Card.Body>
+                      </Card>
+                    </div>
+                  </div>
+                ) : (
+                  <Alert variant="info" className="mb-0">
+                    {t("qrLoading")}
+                  </Alert>
+                )}
+              </Card.Body>
+            </Card>
+          )}
+
+          <Card className="qr-stations-section">
+            <Card.Header className="d-flex justify-content-between align-items-center">
+              <span>{t("qrStationsTitle")}</span>
+              <div className="d-flex gap-2">
+                {qrUnlocked && (
+                  <>
+                    <Button
+                      variant="outline-secondary"
+                      size="sm"
+                      onClick={toggleStationQrCodes}
+                    >
+                      {showStationQrCodes
+                        ? t("qrStationsHide")
+                        : t("qrStationsShow")}
+                    </Button>
+                    {showStationQrCodes && (
+                      <Button
+                        variant="outline-primary"
+                        size="sm"
+                        onClick={() => window.print()}
+                      >
+                        {t("qrPrintButton")}
+                      </Button>
                     )}
+                    <Button
+                      variant="outline-warning"
+                      size="sm"
+                      onClick={handleQrLock}
+                    >
+                      {t("qrLockButton")}
+                    </Button>
+                  </>
+                )}
+              </div>
+            </Card.Header>
+            <Card.Body>
+              {!qrUnlocked ? (
+                <>
+                  <Alert variant="warning" className="mb-3">
+                    <Alert.Heading>{t("qrLockedTitle")}</Alert.Heading>
+                    <p className="mb-0">{t("qrLockedBody")}</p>
+                  </Alert>
+                  <Form onSubmit={handleQrUnlock}>
+                    <Form.Group className="mb-3">
+                      <Form.Label>{t("passwordLabel")}</Form.Label>
+                      <Form.Control
+                        type="password"
+                        placeholder={t("passwordPlaceholder")}
+                        value={qrPassword}
+                        onChange={(event) => {
+                          setQrPassword(event.target.value);
+                          setQrPasswordError("");
+                        }}
+                        isInvalid={!!qrPasswordError}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {qrPasswordError}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                    <Button variant="primary" type="submit">
+                      {t("qrUnlockButton")}
+                    </Button>
+                  </Form>
+                </>
+              ) : !showStationQrCodes ? (
+                <Alert variant="info" className="mb-0">
+                  {t("qrStationsHidden")}
+                </Alert>
+              ) : (
+                <>
+                  <p className="text-muted mb-4 qr-description">
+                    {t("qrDescription")}
+                  </p>
+                  {origin ? (
                     <div className="qr-codes-grid">
                       {qrLocations.map(([id, loc]) => {
                         const qrUrl = `${origin}/location?id=${id}`;
@@ -365,16 +451,16 @@ export default function AdminPage() {
                         );
                       })}
                     </div>
-                  </>
-                ) : (
-                  <Alert variant="info" className="mb-0">
-                    {t("qrLoading")}
-                  </Alert>
-                )}
-              </>
-            )}
-          </Card.Body>
-        </Card>
+                  ) : (
+                    <Alert variant="info" className="mb-0">
+                      {t("qrLoading")}
+                    </Alert>
+                  )}
+                </>
+              )}
+            </Card.Body>
+          </Card>
+        </div>
       )}
     </Container>
   );
