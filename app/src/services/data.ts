@@ -43,8 +43,6 @@ export function getLocalizedLocationsData(
           name: getLocalizedValue(location.name, language),
           collectible: {
             id: location.collectible.id,
-            type: location.collectible.type,
-            title: getLocalizedValue(location.collectible.title, language),
             content: getLocalizedValue(location.collectible.content, language),
             author: getLocalizedValue(location.collectible.author, language),
           },

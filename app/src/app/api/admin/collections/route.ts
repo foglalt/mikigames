@@ -12,7 +12,6 @@ type CollectionRow = {
   location_id: string | null;
   location_name: string | null;
   collectible_id: string | null;
-  collectible_title: string | null;
   collectible_content: string | null;
   collectible_author: string | null;
   collected_at: string | Date | null;
@@ -40,7 +39,6 @@ export async function GET() {
       c.location_id,
       c.location_name,
       c.collectible_id,
-      c.collectible_title,
       c.collectible_content,
       c.collectible_author,
       c.collected_at
@@ -59,7 +57,6 @@ export async function GET() {
         locationId: string;
         locationName: string;
         collectibleId: string;
-        collectibleTitle: string;
         collectibleContent: string;
         collectibleAuthor: string;
         timestamp: string;
@@ -90,7 +87,6 @@ export async function GET() {
       locationId: row.location_id || "",
       locationName: row.location_name || "",
       collectibleId: row.collectible_id || "",
-      collectibleTitle: row.collectible_title || "",
       collectibleContent: row.collectible_content || "",
       collectibleAuthor: row.collectible_author || "",
       timestamp: toIso(row.collected_at ?? new Date(0)),

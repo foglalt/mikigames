@@ -162,7 +162,6 @@ export default function CollectionPage() {
             const location = locationsData?.locations[item.locationId];
             const collectible = location?.collectible;
             const locationName = location?.name ?? item.locationName;
-            const title = collectible?.title ?? item.collectibleTitle;
             const content = collectible?.content ?? item.collectibleContent;
             const author = collectible?.author ?? item.collectibleAuthor;
             return (
@@ -175,7 +174,6 @@ export default function CollectionPage() {
                   </small>
                 </Card.Header>
                 <Card.Body>
-                  <Card.Title>{title}</Card.Title>
                   <blockquote className="blockquote mb-0">
                     <p className="fs-6 fst-italic">
                       "{content}"

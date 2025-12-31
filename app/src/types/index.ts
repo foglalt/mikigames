@@ -2,8 +2,6 @@
 
 export interface Collectible {
   id: string;
-  type: string;
-  title: string;
   content: string;
   author: string;
 }
@@ -25,8 +23,6 @@ export type LocalizedText = Record<Language, string>;
 
 export interface LocalizedCollectible {
   id: string;
-  type: string;
-  title: LocalizedText;
   content: LocalizedText;
   author: LocalizedText;
 }
@@ -48,7 +44,6 @@ export interface CollectionItem {
   locationId: string;
   locationName: string;
   collectibleId: string;
-  collectibleTitle: string;
   collectibleContent: string;
   collectibleAuthor: string;
   timestamp: string;

@@ -15,11 +15,6 @@
       },
       "collectible": {
         "id": "ny_verse_01",
-        "type": "bibleVerse",
-        "title": {
-          "en": "Wise Heart",
-          "hu": "Bölcs szív"
-        },
         "content": {
           "en": "So teach [us] to number our days, that we may apply [our] hearts unto wisdom.",
           "hu": "Taníts minket úgy számlálni napjainkat, hogy bölcs szívhez jussunk."
@@ -37,11 +32,6 @@
       },
       "collectible": {
         "id": "ny_verse_02",
-        "type": "bibleVerse",
-        "title": {
-          "en": "A New Creation",
-          "hu": "Új teremtés"
-        },
         "content": {
           "en": "Then Samuel took a stone, and set [it] between Mizpeh and Shen, and called the name of it Eben–ezer, saying, Hitherto hath the Lord helped us.",
           "hu": "Sámuel pedig vett egy követ, és felállítá Mispa és Sén között, és Ében-Háézernek nevezte el, mert mondá: Mindeddig megsegített minket az Úr!"
@@ -59,11 +49,6 @@
       },
       "collectible": {
         "id": "ny_verse_03",
-        "type": "bibleVerse",
-        "title": {
-          "en": "New Every Morning",
-          "hu": "Minden reggel új"
-        },
         "content": {
           "en": "They are new every morning: great is thy faithfulness. (Lamentations 3:23, KJV)",
           "hu": "„Minden reggel megújul; nagy a hűséged.” (JSir 3:23 – szabad fordítás)"
@@ -81,11 +66,6 @@
       },
       "collectible": {
         "id": "ny_verse_04",
-        "type": "bibleVerse",
-        "title": {
-          "en": "All Things New",
-          "hu": "Mindent újjá tesz"
-        },
         "content": {
           "en": "Behold, I make all things new. (Revelation 21:5, KJV)",
           "hu": "„Íme, mindent újjá teszek.” (Jel 21:5 – szabad fordítás)"
@@ -103,11 +83,6 @@
       },
       "collectible": {
         "id": "ny_verse_05",
-        "type": "bibleVerse",
-        "title": {
-          "en": "Commit Your Way",
-          "hu": "Bízd rá az utad"
-        },
         "content": {
           "en": "Commit thy way unto the LORD; trust also in him; and he shall bring it to pass. (Psalm 37:5, KJV)",
           "hu": "„Bízd az ÚRra utadat, bízz benne, és Ő cselekszik.” (Zsolt 37:5 – szabad fordítás)"
@@ -125,11 +100,6 @@
       },
       "collectible": {
         "id": "ny_verse_06",
-        "type": "bibleVerse",
-        "title": {
-          "en": "He Will Give Peace",
-          "hu": "Békességet ad"
-        },
         "content": {
           "en": "Thou wilt keep him in perfect peace, whose mind is stayed on thee: because he trusteth in thee.",
           "hu": "Kinek szíve Reád támaszkodik, megőrzöd azt teljes békében, mert Te benned bízik."
@@ -147,11 +117,6 @@
       },
       "collectible": {
         "id": "ny_egw_01",
-        "type": "egwQuote",
-        "title": {
-          "en": "First Work of the Day",
-          "hu": "A nap első dolga"
-        },
         "content": {
           "en": "“Consecrate yourself to God in the morning; make this your very first work.”",
           "hu": "„Reggel szenteld magad Istennek; ez legyen az első dolgod.”"
@@ -169,11 +134,6 @@
       },
       "collectible": {
         "id": "ny_egw_02",
-        "type": "egwQuote",
-        "title": {
-          "en": "Nothing to Fear",
-          "hu": "Nincs mitől félnünk"
-        },
         "content": {
           "en": "“We have nothing to fear for the future, except as we shall forget the way the Lord has led us.”",
           "hu": "„A jövőtől nincs mit félnünk, hacsak el nem felejtjük, hogyan vezetett eddig az Úr.”"
@@ -191,11 +151,6 @@
       },
       "collectible": {
         "id": "ny_egw_03",
-        "type": "egwQuote",
-        "title": {
-          "en": "Faith in Dark Days",
-          "hu": "Hit a sötét napokban"
-        },
         "content": {
           "en": "“In the darkest days, when appearances seem most forbidding, have faith in God.”",
           "hu": "„A legsötétebb napokban is, amikor minden reménytelennek tűnik, higgy Istenben.”"
@@ -213,11 +168,6 @@
       },
       "collectible": {
         "id": "ny_egw_04",
-        "type": "egwQuote",
-        "title": {
-          "en": "Leave the Past Behind",
-          "hu": "Hagyd a múltat a múltban"
-        },
         "content": {
           "en": "“Do not bring the disagreeable things of the past into your present life.”",
           "hu": "„Ne hozd át a múlt kellemetlen dolgait a jelenedbe.”"
@@ -235,11 +185,6 @@
       },
       "collectible": {
         "id": "ny_egw_05",
-        "type": "egwQuote",
-        "title": {
-          "en": "Growing Up Into Christ",
-          "hu": "Növekedés Krisztusban"
-        },
         "content": {
           "en": "“The closer you come to Jesus, the more faulty you will appear in your own eyes.”",
           "hu": "„Minél közelebb kerülsz Jézushoz, annál hibásabbnak látod magad.”"
@@ -257,11 +202,6 @@
       },
       "collectible": {
         "id": "ny_egw_06",
-        "type": "egwQuote",
-        "title": {
-          "en": "Christ Waits",
-          "hu": "Krisztus vár"
-        },
         "content": {
           "en": "“Christ is waiting with longing desire for the manifestation of Himself in His church.”",
           "hu": "„Krisztus vágyakozva várja, hogy egyháza által megmutatkozzék.”"
@@ -279,11 +219,6 @@
       },
       "collectible": {
         "id": "ny_q_01",
-        "type": "question",
-        "title": {
-          "en": "Review with God",
-          "hu": "Évértékelés Istennel"
-        },
         "content": {
           "en": "Where did you most clearly see God’s faithfulness this year, and how can you remember it when the next trial comes?",
           "hu": "Hol láttad idén a legvilágosabban Isten hűségét, és hogyan fogsz erre emlékezni a következő próbában?"
@@ -301,11 +236,6 @@
       },
       "collectible": {
         "id": "ny_q_02",
-        "type": "question",
-        "title": {
-          "en": "Confess and Release",
-          "hu": "Megvallás és elengedés"
-        },
         "content": {
           "en": "What burden, sin, or regret do you need to bring to Christ today—and what would trusting His forgiveness change tomorrow?",
           "hu": "Milyen terhet, bűnt vagy bánatot kell ma Krisztus elé vinned — és mit változtatna a holnapodon, ha valóban hinnél a bocsánatában?"
@@ -323,11 +253,6 @@
       },
       "collectible": {
         "id": "ny_q_03",
-        "type": "question",
-        "title": {
-          "en": "One Step of Obedience",
-          "hu": "Egy lépés engedelmesség"
-        },
         "content": {
           "en": "What is one concrete act of obedience or kindness God is inviting you into for the new year?",
           "hu": "Mi az az egy konkrét engedelmességi vagy szeretet-cselekedet, amire Isten hív az új évben?"
@@ -345,11 +270,6 @@
       },
       "collectible": {
         "id": "ny_q_04",
-        "type": "question",
-        "title": {
-          "en": "Your Daily ‘First Work’",
-          "hu": "A napi „első dolgod”"
-        },
         "content": {
           "en": "If the first 10 minutes of your day belonged to God, what would that look like—prayer, Scripture, gratitude, silence?",
           "hu": "Ha a napod első 10 perce Istené lenne, hogy nézne ki: ima, ige, hála, csend?"
@@ -367,11 +287,6 @@
       },
       "collectible": {
         "id": "ny_q_05",
-        "type": "question",
-        "title": {
-          "en": "Hope as a Choice",
-          "hu": "A remény mint döntés"
-        },
         "content": {
           "en": "What promise from Scripture do you want to ‘hold in your hands’ when anxiety tries to lead your thoughts?",
           "hu": "Melyik bibliai ígéretet akarod „kézben tartani”, amikor a szorongás el akarja vinni a gondolataidat?"
@@ -389,11 +304,6 @@
       },
       "collectible": {
         "id": "ny_q_06",
-        "type": "question",
-        "title": {
-          "en": "Pray Forward",
-          "hu": "Imádkozz előre"
-        },
         "content": {
           "en": "For whom will you pay attention to pray regularly this ",
           "hu": "Kiért fogsz szándékosan imádkozni hetente idén — és hogyan fogod a tetteiddel is követni ezt az imát?"

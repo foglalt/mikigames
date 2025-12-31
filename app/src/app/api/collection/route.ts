@@ -9,7 +9,6 @@ type CollectionRow = {
   location_id: string;
   location_name: string;
   collectible_id: string;
-  collectible_title: string;
   collectible_content: string;
   collectible_author: string;
   collected_at: string | Date;
@@ -42,7 +41,6 @@ export async function GET(request: Request) {
       c.location_id,
       c.location_name,
       c.collectible_id,
-      c.collectible_title,
       c.collectible_content,
       c.collectible_author,
       c.collected_at
@@ -58,7 +56,6 @@ export async function GET(request: Request) {
     locationId: row.location_id,
     locationName: row.location_name,
     collectibleId: row.collectible_id,
-    collectibleTitle: row.collectible_title,
     collectibleContent: row.collectible_content,
     collectibleAuthor: row.collectible_author,
     timestamp: toIso(row.collected_at),
@@ -83,8 +80,6 @@ export async function POST(request: Request) {
     typeof body?.locationName === "string" ? body.locationName : "";
   const collectibleId =
     typeof body?.collectibleId === "string" ? body.collectibleId : "";
-  const collectibleTitle =
-    typeof body?.collectibleTitle === "string" ? body.collectibleTitle : "";
   const collectibleContent =
     typeof body?.collectibleContent === "string"
       ? body.collectibleContent
@@ -117,7 +112,6 @@ export async function POST(request: Request) {
       location_id,
       location_name,
       collectible_id,
-      collectible_title,
       collectible_content,
       collectible_author
     )
@@ -126,7 +120,6 @@ export async function POST(request: Request) {
       ${locationId},
       ${locationName},
       ${collectibleId},
-      ${collectibleTitle},
       ${collectibleContent},
       ${collectibleAuthor}
     )
@@ -138,7 +131,6 @@ export async function POST(request: Request) {
       location_id,
       location_name,
       collectible_id,
-      collectible_title,
       collectible_content,
       collectible_author,
       collected_at
@@ -157,7 +149,6 @@ export async function POST(request: Request) {
       locationId: row.location_id,
       locationName: row.location_name,
       collectibleId: row.collectible_id,
-      collectibleTitle: row.collectible_title,
       collectibleContent: row.collectible_content,
       collectibleAuthor: row.collectible_author,
       timestamp: toIso(row.collected_at),

@@ -94,7 +94,6 @@ export default function LocationClient() {
           locationId: locationId,
           locationName: location.name,
           collectibleId: location.collectible.id,
-          collectibleTitle: location.collectible.title,
           collectibleContent: location.collectible.content,
           collectibleAuthor: location.collectible.author,
         }).then((saved) => {
@@ -112,8 +111,6 @@ export default function LocationClient() {
         ];
       setCurrentDisplay({
         id: "placeholder",
-        type: "quote",
-        title: randomQuote.title,
         content: randomQuote.content,
         author: randomQuote.author,
       });
@@ -194,7 +191,6 @@ export default function LocationClient() {
               </div>
             )}
 
-            <h4 className="text-center mb-3">{displayItem.title}</h4>
             <blockquote className="blockquote text-center">
               <p className="mb-3">"{displayItem.content}"</p>
               <footer className="blockquote-footer">
