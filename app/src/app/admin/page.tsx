@@ -256,9 +256,29 @@ export default function AdminPage() {
                 </tr>
               </thead>
               <tbody>
-                {userList.map((user) => (
-                  <tr key={user.username}>
-                    <td>{user.username}</td>
+                {userList.map((user, index) => {
+                  const rank = index + 1;
+                  const isTop = rank <= 3;
+                  const rowClass = isTop
+                    ? `top-player-row top-player-rank-${rank}`
+                    : undefined;
+
+                  return (
+                  <tr key={user.username} className={rowClass}>
+                    <td>
+                      <div className="d-flex align-items-center gap-2">
+                        {isTop && (
+                          <Badge
+                            bg="light"
+                            text="dark"
+                            className={`top-player-badge rank-${rank}`}
+                          >
+                            #{rank}
+                          </Badge>
+                        )}
+                        <span>{user.username}</span>
+                      </div>
+                    </td>
                     <td>
                       <Badge bg="primary">{user.totalCount}</Badge>
                     </td>
@@ -294,7 +314,8 @@ export default function AdminPage() {
                       })}
                     </td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </Table>
           )}
